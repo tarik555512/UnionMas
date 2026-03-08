@@ -3,163 +3,225 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>UnionMas Bank | Ultimate Mobile</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <title>UnionMas | Neo-Bank</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Plus+Jakarta+Sans:wght@300;500;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --glass: rgba(255, 255, 255, 0.05);
-            --border: rgba(255, 255, 255, 0.12);
+            --bg: #050505;
             --accent: #00f2ff;
-            --danger: #ff4d4d;
-            --bg: #030712;
+            --accent-glow: rgba(0, 242, 255, 0.4);
+            --card-grad: linear-gradient(135deg, #00f2ff 0%, #0066ff 100%);
+            --surface: #121212;
+            --border: rgba(255, 255, 255, 0.08);
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; outline: none; }
-        body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: white; overflow: hidden; height: 100vh; position: fixed; width: 100%; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background: var(--bg); 
+            color: white; 
+            overflow: hidden; 
+            height: 100vh;
+        }
 
-        .bg-animate { position: fixed; inset: 0; z-index: -1; background: radial-gradient(circle at 0% 0%, #1e1b4b, #030712); }
-        .sphere { position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.15; animation: move 20s infinite alternate ease-in-out; }
-        @keyframes move { 0% { transform: translate(0, 0); } 100% { transform: translate(80px, 80px); } }
+        /* Анимированный фон */
+        .bg-glow {
+            position: fixed; inset: 0; z-index: -1;
+            background: radial-gradient(circle at 50% 50%, #1a1a2e, #050505);
+        }
+        .orb {
+            position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.2;
+            animation: float 20s infinite alternate;
+        }
 
-        .aero { background: var(--glass); backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px); border: 1px solid var(--border); border-radius: 28px; }
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(100px, 50px) scale(1.2); }
+        }
 
-        /* PIN */
-        #pin-screen { position: fixed; inset: 0; z-index: 9000; background: var(--bg); display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        .pin-dot { width: 14px; height: 14px; border: 2px solid white; border-radius: 50%; margin: 0 12px; transition: 0.3s; }
-        .pin-dot.active { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 20px var(--accent); }
-        .keypad { display: grid; grid-template-columns: repeat(3, 85px); gap: 15px; margin-top: 50px; }
-        .key { width: 85px; height: 85px; border-radius: 50%; border: 1px solid var(--border); background: var(--glass); display: flex; justify-content: center; align-items: center; font-size: 1.8rem; cursor: pointer; }
+        /* PIN SCREEN */
+        #pin-screen {
+            position: fixed; inset: 0; z-index: 9999; background: var(--bg);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+        }
+        .pin-display { display: flex; gap: 20px; margin-bottom: 40px; }
+        .pin-dot { 
+            width: 16px; height: 16px; border: 2px solid var(--border); border-radius: 50%; 
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .pin-dot.active { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 15px var(--accent); transform: scale(1.2); }
 
-        /* APP MAIN */
-        #main-app { display: none; flex-direction: column; padding: 20px; max-width: 450px; margin: 0 auto; height: 100vh; animation: fadeIn 0.4s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        /* MAIN LAYOUT */
+        #main-app { display: none; padding: 20px; height: 100vh; flex-direction: column; animation: appAppear 0.8s ease; }
+        @keyframes appAppear { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        .header { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding: 10px 0; }
-        .settings-btn { width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; background: var(--glass); border-radius: 15px; border: 1px solid var(--border); }
+        /* CARD DESIGN */
+        .card {
+            background: var(--card-grad);
+            padding: 30px; border-radius: 35px; margin-top: 10px;
+            box-shadow: 0 20px 40px rgba(0, 242, 255, 0.15);
+            position: relative; overflow: hidden;
+            transition: 0.3s;
+        }
+        .card::after {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: translateX(-100%); animation: shine 5s infinite;
+        }
+        @keyframes shine { 100% { transform: translateX(100%); } }
 
-        .balance-card { padding: 45px 20px; margin: 15px 0; text-align: center; position: relative; }
-        .balance-card.low { border-color: var(--danger); box-shadow: inset 0 0 20px rgba(255,77,77,0.1); }
-        .balance-val { font-family: 'JetBrains Mono', monospace; font-size: 2.6rem; font-weight: 800; letter-spacing: -2px; }
-        #low-bal-warn { display: none; color: var(--danger); font-size: 0.7rem; font-weight: 800; margin-bottom: 8px; animation: blink 1s infinite; }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+        .balance-label { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; opacity: 0.8; color: black; }
+        .balance-val { font-family: 'Orbitron', sans-serif; font-size: 2.2rem; font-weight: 700; color: black; margin: 10px 0; }
 
-        .action-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
-        .btn-full { grid-column: span 2; }
-        .btn-main { padding: 18px; border-radius: 20px; font-weight: 800; font-size: 0.75rem; text-transform: uppercase; cursor: pointer; border: none; transition: 0.2s; }
-        .btn-white { background: white; color: black; }
-        .btn-glass { background: var(--glass); color: white; border: 1px solid var(--border); }
-        .btn-main:active { transform: scale(0.96); }
+        /* ACTION BUTTONS */
+        .quick-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 25px 0; }
+        .act-btn { 
+            background: var(--surface); border: 1px solid var(--border); 
+            padding: 20px 10px; border-radius: 24px; text-align: center;
+            transition: 0.2s; cursor: pointer;
+        }
+        .act-btn:active { transform: scale(0.9); background: var(--border); }
+        .act-btn i { display: block; font-size: 1.2rem; margin-bottom: 8px; }
+        .act-btn span { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; }
 
-        .section-header { display: flex; justify-content: space-between; align-items: center; margin: 20px 5px 12px; font-size: 0.8rem; font-weight: 800; color: rgba(255,255,255,0.3); }
-        .scroll-h { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
-        .scroll-h::-webkit-scrollbar { display: none; }
-
-        .pill { min-width: 90px; padding: 18px 10px; text-align: center; }
-        .avatar { width: 52px; height: 52px; border-radius: 18px; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; font-weight: 800; }
-        
-        /* КНОПКИ В НАСТРОЙКАХ (КАК РАНЬШЕ) */
-        .setting-item { margin-bottom: 25px; }
-        .setting-label { font-size: 0.65rem; font-weight: 800; opacity: 0.4; margin-bottom: 12px; display: block; text-transform: uppercase; }
-        .toggle-group { display: flex; background: rgba(255,255,255,0.05); border-radius: 12px; padding: 4px; border: 1px solid var(--border); }
-        .toggle-btn { flex: 1; padding: 12px; border: none; background: none; color: white; font-weight: 700; border-radius: 8px; cursor: pointer; font-size: 0.7rem; }
-        .toggle-btn.active { background: var(--accent); color: black; box-shadow: 0 4px 15px rgba(0, 242, 255, 0.3); }
+        /* LISTS */
+        .scroll-list { display: flex; gap: 15px; overflow-x: auto; padding: 10px 0; scrollbar-width: none; }
+        .item-circle { 
+            min-width: 70px; display: flex; flex-direction: column; align-items: center; gap: 8px; 
+            animation: slideIn 0.5s ease backwards;
+        }
+        .avatar { width: 60px; height: 60px; border-radius: 22px; background: var(--surface); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.2rem; }
 
         /* MODALS */
-        .modal { display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,0.95); backdrop-filter: blur(25px); padding: 25px; flex-direction: column; align-items: center; justify-content: center; }
-        .modal-content { width: 100%; max-width: 400px; padding: 30px; animation: modalIn 0.3s ease; }
-        @keyframes modalIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .modal { 
+            display: none; position: fixed; inset: 0; z-index: 10000; 
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(20px);
+            padding: 20px; flex-direction: column; justify-content: flex-end;
+        }
+        .modal-sheet { 
+            background: var(--surface); border-radius: 40px 40px 0 0; 
+            padding: 30px; width: 100%; max-width: 500px; margin: 0 auto;
+            transform: translateY(100%); animation: sheetUp 0.4s cubic-bezier(0.17, 0.84, 0.44, 1) forwards;
+        }
+        @keyframes sheetUp { to { transform: translateY(0); } }
 
-        .modal-input { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border); padding: 18px; border-radius: 18px; color: white; font-family: 'Montserrat'; font-size: 1rem; margin-bottom: 15px; }
-        
-        .history-container { width: 100%; max-height: 60vh; overflow-y: auto; scrollbar-width: none; margin: 15px 0; }
-        .history-card { display: flex; justify-content: space-between; align-items: center; padding: 20px; margin-bottom: 12px; border: 1px solid var(--border); border-radius: 20px; background: var(--glass); }
+        .input-neo {
+            width: 100%; background: #1a1a1a; border: 1px solid var(--border);
+            padding: 20px; border-radius: 20px; color: white; font-size: 1.1rem;
+            margin-bottom: 15px; transition: 0.3s;
+        }
+        .input-neo:focus { border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); }
+
+        .btn-confirm { 
+            width: 100%; background: var(--accent); color: black; border: none;
+            padding: 20px; border-radius: 20px; font-weight: 800; font-size: 1rem;
+        }
+
+        .history-item {
+            background: rgba(255,255,255,0.03); padding: 18px; border-radius: 22px;
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;
+        }
     </style>
 </head>
 <body>
 
-    <div class="bg-animate"><div class="sphere" style="width: 400px; height: 400px; background: var(--accent); top:-10%; left:-10%;"></div></div>
+    <div class="bg-glow">
+        <div class="orb" style="width:300px; height:300px; background:var(--accent); top:10%; left:-10%;"></div>
+        <div class="orb" style="width:250px; height:250px; background:#6366f1; bottom:20%; right:-10%; animation-delay:-5s;"></div>
+    </div>
 
     <div id="pin-screen">
-        <h2 style="font-weight: 800; letter-spacing: 12px; margin-bottom: 40px;">UNIONMAS</h2>
-        <div style="display: flex;"><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div></div>
-        <div class="keypad">
-            <div class="key" onclick="press(1)">1</div><div class="key" onclick="press(2)">2</div><div class="key" onclick="press(3)">3</div>
-            <div class="key" onclick="press(4)">4</div><div class="key" onclick="press(5)">5</div><div class="key" onclick="press(6)">6</div>
-            <div class="key" onclick="press(7)">7</div><div class="key" onclick="press(8)">8</div><div class="key" onclick="press(9)">9</div>
-            <div style="width:85px"></div><div class="key" onclick="press(0)">0</div><div class="key" onclick="clr()">✕</div>
+        <div style="font-family: 'Orbitron'; letter-spacing: 8px; margin-bottom: 50px; font-size: 1.5rem;">UNIONMAS</div>
+        <div class="pin-display">
+            <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(3, 80px); gap: 20px;">
+            <div onclick="press(1)" class="avatar">1</div><div onclick="press(2)" class="avatar">2</div><div onclick="press(3)" class="avatar">3</div>
+            <div onclick="press(4)" class="avatar">4</div><div onclick="press(5)" class="avatar">5</div><div onclick="press(6)" class="avatar">6</div>
+            <div onclick="press(7)" class="avatar">7</div><div onclick="press(8)" class="avatar">8</div><div onclick="press(9)" class="avatar">9</div>
+            <div></div><div onclick="press(0)" class="avatar">0</div><div onclick="clr()" class="avatar" style="font-size: 0.8rem;">✕</div>
         </div>
     </div>
 
     <div id="main-app">
-        <div class="header">
-            <div style="font-weight: 800; letter-spacing: 2px;">UNIONMAS <span style="color:var(--accent); font-size: 0.65rem;">LIVE</span></div>
-            <div class="settings-btn" onclick="openModal('settings-modal')">⚙</div>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-weight: 800; font-size: 1.2rem;">Hello, User</span>
+            <div class="avatar" style="width:45px; height:45px; cursor:pointer;" onclick="openModal('settings-modal')">⚙</div>
         </div>
 
-        <div id="bal-card" class="balance-card aero">
-            <div id="low-bal-warn">НИЗКИЙ БАЛАНС</div>
-            <div class="balance-val" id="balance">0</div>
+        <div class="card" id="bal-card">
+            <div class="balance-label" id="lbl-bal">Current Balance</div>
+            <div class="balance-val" id="balance">0 ₽</div>
+            <div style="font-size: 0.6rem; color: black; font-weight: 700; letter-spacing: 1px;" id="lbl-status">SYSTEM ONLINE</div>
         </div>
 
-        <div class="action-btns">
-            <button id="btn-top" class="btn-main btn-white" onclick="actionFlow('topup')">ПОПОЛНИТЬ</button>
-            <button id="btn-conv" class="btn-main btn-glass" onclick="openModal('conv-modal')">КУРСЫ</button>
-            <button id="btn-his" class="btn-main btn-glass btn-full" onclick="openModal('history-modal')">ИСТОРИЯ</button>
+        <div class="quick-actions">
+            <div class="act-btn" onclick="actionFlow('topup')"><span id="btn-top">Top Up</span></div>
+            <div class="act-btn" onclick="openModal('conv-modal')"><span id="btn-conv">Rates</span></div>
+            <div class="act-btn" onclick="openModal('history-modal')"><span id="btn-his">History</span></div>
         </div>
 
-        <div class="section-header"><span id="lbl-con">КОНТАКТЫ</span><span onclick="actionFlow('add_contact')" style="color:var(--accent); cursor:pointer">+</span></div>
-        <div class="scroll-h" id="contacts-list"></div>
+        <div style="margin-top: 20px;">
+            <div style="display: flex; justify-content: space-between; font-weight: 800; font-size: 0.8rem; margin-bottom: 15px;">
+                <span id="lbl-con">CONTACTS</span>
+                <span style="color:var(--accent)" onclick="actionFlow('add_contact')">+ ADD</span>
+            </div>
+            <div class="scroll-list" id="contacts-list"></div>
+        </div>
 
-        <div class="section-header"><span id="lbl-cor">КОМПАНИИ</span><span onclick="actionFlow('add_company')" style="color:var(--accent); cursor:pointer">+</span></div>
-        <div class="scroll-h" id="companies-list"></div>
+        <div style="margin-top: 30px;">
+            <div style="display: flex; justify-content: space-between; font-weight: 800; font-size: 0.8rem; margin-bottom: 15px;">
+                <span id="lbl-cor">COMPANIES</span>
+                <span style="color:var(--accent)" onclick="actionFlow('add_company')">+ ADD</span>
+            </div>
+            <div class="scroll-list" id="companies-list"></div>
+        </div>
     </div>
 
-    <div id="settings-modal" class="modal">
-        <div class="modal-content aero">
-            <h3 id="set-title" style="margin-bottom:25px; text-align: center;">НАСТРОЙКИ</h3>
-            <div class="setting-item">
-                <span id="lbl-set-lang" class="setting-label">Язык</span>
-                <div class="toggle-group">
-                    <button id="lang-rus" class="toggle-btn" onclick="setLang('RUS')">RUS</button>
-                    <button id="lang-eng" class="toggle-btn" onclick="setLang('ENG')">ENG</button>
+    <div id="settings-modal" class="modal" onclick="if(event.target==this) closeModals()">
+        <div class="modal-sheet">
+            <h2 id="set-title" style="margin-bottom:25px">Settings</h2>
+            <div style="margin-bottom:20px">
+                <p id="lbl-lang" style="font-size:0.7rem; opacity:0.5; margin-bottom:10px">LANGUAGE</p>
+                <div style="display:flex; gap:10px">
+                    <button class="act-btn" style="flex:1" onclick="setLang('RUS')">РУССКИЙ</button>
+                    <button class="act-btn" style="flex:1" onclick="setLang('ENG')">ENGLISH</button>
                 </div>
             </div>
-            <div class="setting-item">
-                <span id="lbl-set-curr" class="setting-label">Валюта</span>
-                <div class="toggle-group">
-                    <button id="cur-rub" class="toggle-btn" onclick="setCurr('₽')">₽</button>
-                    <button id="cur-kzt" class="toggle-btn" onclick="setCurr('₸')">₸</button>
-                    <button id="cur-usd" class="toggle-btn" onclick="setCurr('$')">$</button>
+            <div style="margin-bottom:30px">
+                <p id="lbl-cur" style="font-size:0.7rem; opacity:0.5; margin-bottom:10px">CURRENCY</p>
+                <div style="display:flex; gap:10px">
+                    <button class="act-btn" style="flex:1" onclick="setCurr('₽')">RUB</button>
+                    <button class="act-btn" style="flex:1" onclick="setCurr('₸')">KZT</button>
+                    <button class="act-btn" style="flex:1" onclick="setCurr('$')">USD</button>
                 </div>
             </div>
-            <button id="btn-clear" style="background:rgba(255,77,77,0.1); color:var(--danger); border:1px solid var(--danger); width:100%; padding:15px; border-radius:15px; font-weight:700;" onclick="confirmAction('clear_history')">ОЧИСТИТЬ ИСТОРИЮ</button>
-            <button style="width:100%; margin-top:20px; color:white; background:none; border:none;" onclick="closeModals()">ЗАКРЫТЬ</button>
+            <button class="btn-confirm" onclick="closeModals()">SAVE</button>
         </div>
     </div>
 
-    <div id="history-modal" class="modal">
-        <div class="modal-content aero" style="max-height: 85vh; display: flex; flex-direction: column;">
-            <h3 id="his-title" style="margin-bottom:20px; text-align: center;">ИСТОРИЯ</h3>
-            <div class="history-container" id="history-list"></div>
-            <button class="btn-white" style="width:100%; padding:18px; border-radius:15px; font-weight:800;" onclick="closeModals()">ЗАКРЫТЬ</button>
+    <div id="history-modal" class="modal" onclick="if(event.target==this) closeModals()">
+        <div class="modal-sheet" style="height: 80vh;">
+            <h2 id="his-title" style="margin-bottom:20px">History</h2>
+            <div id="history-list" style="overflow-y:auto; height: calc(100% - 100px); scrollbar-width:none;"></div>
         </div>
     </div>
 
-    <div id="conv-modal" class="modal">
-        <div class="modal-content aero">
-            <h3 id="conv-title" style="margin-bottom:25px; text-align: center;">КУРСЫ</h3>
+    <div id="conv-modal" class="modal" onclick="if(event.target==this) closeModals()">
+        <div class="modal-sheet">
+            <h2 id="conv-title" style="margin-bottom:20px">Converter</h2>
             <div id="conv-list"></div>
-            <button class="btn-white" style="width:100%; padding:18px; border-radius:15px;" onclick="closeModals()">ОК</button>
+            <button class="btn-confirm" style="margin-top:20px" onclick="closeModals()">CLOSE</button>
         </div>
     </div>
 
     <div id="prompt-modal" class="modal">
-        <div class="modal-content aero">
-            <h3 id="prompt-title" style="margin-bottom:20px; text-align: center;">ВВОД</h3>
-            <input type="text" id="prompt-in-1" class="modal-input" spellcheck="false">
-            <input type="number" id="prompt-in-2" class="modal-input" inputmode="decimal">
-            <button id="prompt-ok" class="btn-white" style="width:100%; padding:18px; border-radius:15px; font-weight:800; margin-bottom:10px;">OK</button>
-            <button class="btn-cancel" style="width:100%" onclick="closeModals()">ОТМЕНА</button>
+        <div class="modal-sheet">
+            <h2 id="prompt-title" style="margin-bottom:20px">Input</h2>
+            <input type="text" id="in-1" class="input-neo" spellcheck="false">
+            <input type="number" id="in-2" class="input-neo" inputmode="decimal">
+            <button id="btn-ok" class="btn-confirm">CONFIRM</button>
+            <button onclick="closeModals()" style="width:100%; background:none; border:none; color:white; margin-top:15px; opacity:0.5;">CANCEL</button>
         </div>
     </div>
 
@@ -167,26 +229,27 @@
         let pin = "";
         let balance = parseFloat(localStorage.getItem('um_bal')) || 0;
         let history = JSON.parse(localStorage.getItem('um_his')) || [];
-        let contacts = JSON.parse(localStorage.getItem('um_con')) || [{name:"Мария", color:"#ff4d94"}];
+        let contacts = JSON.parse(localStorage.getItem('um_con')) || [{name:"Maria"}];
         let companies = JSON.parse(localStorage.getItem('um_com')) || [{name:"UnionMas"}];
         let lang = localStorage.getItem('um_lang') || 'RUS';
         let currency = localStorage.getItem('um_curr') || '₽';
 
         const t = {
-            RUS: { bal:"БАЛАНС", top:"ПОПОЛНИТЬ", conv:"КУРСЫ", his:"ИСТОРИЯ", con:"КОНТАКТЫ", cor:"КОМПАНИИ", set:"НАСТРОЙКИ", lang:"Язык", cur:"Валюта", clear:"ОЧИСТИТЬ ИСТОРИЮ", close:"ЗАКРЫТЬ", low:"НИЗКИЙ БАЛАНС", conv_t:"ВАШ БАЛАНС В:", name:"Имя", amt:"Сумма", del:"УДАЛИТЬ?", from:"От: ", transfer:"Перевод: ", pay:"Оплата: " },
-            ENG: { bal:"BALANCE", top:"TOP UP", conv:"RATES", his:"HISTORY", con:"CONTACTS", cor:"CORPORATIONS", set:"SETTINGS", lang:"Language", cur:"Currency", clear:"CLEAR HISTORY", close:"CLOSE", low:"LOW BALANCE", conv_t:"BALANCE IN:", name:"Name", amt:"Amount", del:"DELETE?", from:"From: ", transfer:"Transfer: ", pay:"Payment: " }
+            RUS: { bal:"ТЕКУЩИЙ БАЛАНС", top:"ПОПОЛНИТЬ", conv:"КУРСЫ", his:"ИСТОРИЯ", con:"КОНТАКТЫ", cor:"КОМПАНИИ", set:"НАСТРОЙКИ", lang:"ЯЗЫК", cur:"ВАЛЮТА", close:"ЗАКРЫТЬ", ok:"ПОДТВЕРДИТЬ", name:"Имя", amt:"Сумма", del:"Удалить?", low:"НИЗКИЙ БАЛАНС" },
+            ENG: { bal:"CURRENT BALANCE", top:"TOP UP", conv:"RATES", his:"HISTORY", con:"CONTACTS", cor:"CORPORATIONS", set:"SETTINGS", lang:"LANGUAGE", cur:"CURRENCY", close:"CLOSE", ok:"CONFIRM", name:"Name", amt:"Amount", del:"Delete?", low:"LOW BALANCE" }
         };
 
         function press(n) {
             if(pin.length < 4) {
                 pin += n; document.querySelectorAll('.pin-dot')[pin.length-1].classList.add('active');
                 if(pin.length === 4) {
-                    if(pin === "2807") { document.getElementById('pin-screen').style.display = 'none'; document.getElementById('main-app').style.display = 'flex'; render(); }
-                    else { setTimeout(clr, 200); }
+                    if(pin === "2807") { document.getElementById('pin-screen').style.display='none'; document.getElementById('main-app').style.display='flex'; render(); }
+                    else { setTimeout(clr, 300); }
                 }
             }
         }
         function clr() { pin = ""; document.querySelectorAll('.pin-dot').forEach(d => d.classList.remove('active')); }
+
         function openModal(id) { 
             if(id === 'conv-modal') updateConv();
             if(id === 'history-modal') updateHistory();
@@ -197,24 +260,24 @@
         function actionFlow(type, extra = null) {
             const curT = t[lang];
             openModal('prompt-modal');
-            const in1 = document.getElementById('prompt-in-1');
-            const in2 = document.getElementById('prompt-in-2');
+            const in1 = document.getElementById('in-1');
+            const in2 = document.getElementById('in-2');
             in1.value = ""; in2.value = ""; in1.style.display = 'block'; in2.style.display = 'block';
             in1.placeholder = curT.name; in2.placeholder = curT.amt;
 
             if(type === 'pay') { in1.value = extra.name; in1.style.display = 'none'; in2.focus(); }
-            if(type === 'add_contact' || type === 'add_company') in2.style.display = 'none';
+            if(type.includes('add')) in2.style.display = 'none';
 
-            document.getElementById('prompt-ok').onclick = () => {
+            document.getElementById('btn-ok').onclick = () => {
                 const name = in1.value; const amt = parseFloat(in2.value);
                 if(type.includes('add')) {
-                    if(name) { if(type === 'add_contact') contacts.push({name: name, color: '#00f2ff'}); else companies.push({name: name}); }
+                    if(name) { if(type === 'add_contact') contacts.push({name: name}); else companies.push({name: name}); }
                 } else {
                     if(!amt) return;
-                    if(type === 'topup') { balance += amt; history.unshift({n: curT.from + (name || "?"), a: amt, s: "+", curr: currency}); }
+                    if(type === 'topup') { balance += amt; history.unshift({n: (lang==='RUS'?'От: ':'From: ')+name, a: amt, s: "+"}); }
                     else {
                         if(amt > balance) return alert(curT.low);
-                        balance -= amt; history.unshift({n: (extra.type==='user'?curT.transfer:curT.pay) + name, a: amt, s: "-", curr: currency});
+                        balance -= amt; history.unshift({n: name, a: amt, s: "-"});
                     }
                 }
                 closeModals(); render();
@@ -226,22 +289,19 @@
             const rK = 5.2 + (h%10)/50; const rU = 1/(92 + (h%20)/10);
             const rates = { '₽':{'₸':rK, '$':rU}, '₸':{'₽':1/rK, '$':(1/rK)*rU}, '$':{'₽':1/rU, '₸':(1/rU)*rK} };
             const others = ['₽', '₸', '$'].filter(c => c !== currency);
-            document.getElementById('conv-title').innerText = t[lang].conv_t;
-            document.getElementById('conv-list').innerHTML = others.map(c => `<div style="display:flex; justify-content:space-between; padding:20px; background:rgba(255,255,255,0.03); border-radius:15px; margin-bottom:10px; border:1px solid var(--border);"><span>${c}</span><span style="font-family:'JetBrains Mono'; color:var(--accent); font-weight:800;">${(balance * rates[currency][c]).toLocaleString()}</span></div>`).join('');
+            document.getElementById('conv-list').innerHTML = others.map(c => `
+                <div class="history-item">
+                    <span style="font-weight:800; opacity:0.6">${c}</span>
+                    <span style="font-family:'Orbitron'; color:var(--accent)">${(balance * rates[currency][c]).toLocaleString()}</span>
+                </div>`).join('');
         }
 
         function updateHistory() {
-            document.getElementById('his-title').innerText = t[lang].his;
-            document.getElementById('history-list').innerHTML = history.length ? history.map(h => `<div class="history-card"><div><div style="font-size:0.85rem; font-weight:700;">${h.n}</div><div style="font-size:0.6rem; opacity:0.4;">UnionMas Pay</div></div><div style="font-family:'JetBrains Mono'; font-weight:700; color:${h.s==='+'?'#00f2ff':'#ff4d4d'}">${h.s}${h.a.toLocaleString()} ${h.curr}</div></div>`).join('') : '<p style="text-align:center; opacity:0.3; margin-top:20px;">Empty</p>';
-        }
-
-        function confirmAction(type, i) {
-            if(confirm(t[lang].del)) {
-                if(type === 'clear_history') history = [];
-                else if(type === 'del_con') contacts.splice(i, 1);
-                else if(type === 'del_com') companies.splice(i, 1);
-                render();
-            }
+            document.getElementById('history-list').innerHTML = history.map(h => `
+                <div class="history-item">
+                    <div><p style="font-size:0.8rem; font-weight:800">${h.n}</p><p style="font-size:0.5rem; opacity:0.5">NET TRANSACTION</p></div>
+                    <span style="font-family:'Orbitron'; color:${h.s==='+'?'#00ff88':var(--accent)}">${h.s}${h.a.toLocaleString()} ${currency}</span>
+                </div>`).join('');
         }
 
         function setLang(l) { lang = l; localStorage.setItem('um_lang', l); render(); }
@@ -250,30 +310,25 @@
         function render() {
             const curT = t[lang];
             document.getElementById('balance').innerText = balance.toLocaleString() + ' ' + currency;
-            
-            const thresholds = { '₽':1000, '₸':5000, '$':15 };
-            const isLow = balance < thresholds[currency] && balance > 0;
-            document.getElementById('low-bal-warn').style.display = isLow ? 'block' : 'none';
-            document.getElementById('low-bal-warn').innerText = curT.low;
-            document.getElementById('bal-card').classList.toggle('low', isLow);
-
+            document.getElementById('lbl-bal').innerText = curT.bal;
             document.getElementById('btn-top').innerText = curT.top;
             document.getElementById('btn-conv').innerText = curT.conv;
             document.getElementById('btn-his').innerText = curT.his;
             document.getElementById('lbl-con').innerText = curT.con;
             document.getElementById('lbl-cor').innerText = curT.cor;
             document.getElementById('set-title').innerText = curT.set;
-            document.getElementById('lbl-set-lang').innerText = curT.lang;
-            document.getElementById('lbl-set-curr').innerText = curT.cur;
-            document.getElementById('btn-clear').innerText = curT.clear;
 
-            document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('lang-' + lang.toLowerCase()).classList.add('active');
-            const cMap = {'₽':'rub', '₸':'kzt', '$':'usd'};
-            document.getElementById('cur-' + cMap[currency]).classList.add('active');
+            document.getElementById('contacts-list').innerHTML = contacts.map((c, i) => `
+                <div class="item-circle" onclick="actionFlow('pay', {name:'${c.name}'})" oncontextmenu="if(confirm('${curT.del}')){contacts.splice(${i},1);render();}return false;">
+                    <div class="avatar">${c.name[0]}</div>
+                    <span style="font-size:0.6rem; font-weight:800">${c.name}</span>
+                </div>`).join('');
 
-            document.getElementById('contacts-list').innerHTML = contacts.map((c, i) => `<div class="aero pill" onclick="actionFlow('pay', {name:'${c.name}', type:'user'})" oncontextmenu="confirmAction('del_con', ${i}); return false;"><div class="avatar" style="background:${c.color || '#4f46e5'}">${c.name[0]}</div><div style="font-size:0.75rem; font-weight:700;">${c.name}</div></div>`).join('');
-            document.getElementById('companies-list').innerHTML = companies.map((c, i) => `<div class="aero pill" style="min-width:140px" onclick="actionFlow('pay', {name:'${c.name}', type:'comp'})" oncontextmenu="confirmAction('del_com', ${i}); return false;"><div style="font-size:0.75rem; font-weight:700; text-align:center; width:100%">${c.name}</div></div>`).join('');
+            document.getElementById('companies-list').innerHTML = companies.map((c, i) => `
+                <div class="item-circle" onclick="actionFlow('pay', {name:'${c.name}'})" oncontextmenu="if(confirm('${curT.del}')){companies.splice(${i},1);render();}return false;">
+                    <div class="avatar" style="border-radius:50%">${c.name[0]}</div>
+                    <span style="font-size:0.6rem; font-weight:800">${c.name}</span>
+                </div>`).join('');
 
             localStorage.setItem('um_bal', balance);
             localStorage.setItem('um_his', JSON.stringify(history));
