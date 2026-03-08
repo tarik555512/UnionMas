@@ -3,21 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>UnionMas Bank | Aero Business</title>
+    <title>UnionMas Bank | Ultimate Aero</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --glass: rgba(255, 255, 255, 0.1);
-            --border: rgba(255, 255, 255, 0.2);
+            --glass: rgba(255, 255, 255, 0.08);
+            --border: rgba(255, 255, 255, 0.15);
             --accent: #00f2ff;
+            --bg: #050a18;
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; outline: none; }
 
-        body, html {
-            margin: 0; padding: 0; width: 100%; height: 100%;
+        body {
             font-family: 'Montserrat', sans-serif;
-            background: #050a18; color: white; overflow: hidden;
+            background: var(--bg);
+            color: white;
+            overflow: hidden;
+            height: 100vh;
         }
 
         /* Живой фон */
@@ -25,55 +28,70 @@
             position: fixed; inset: 0; z-index: -1;
             background: radial-gradient(circle at center, #0f172a, #050a18);
         }
-
         .sphere {
-            position: absolute; border-radius: 50%;
-            filter: blur(80px); opacity: 0.3;
+            position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.3;
             animation: move 25s infinite alternate ease-in-out;
         }
-
-        @keyframes move { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(150px, 250px) scale(1.2); } }
+        @keyframes move { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(100px, 200px) scale(1.2); } }
 
         .aero {
             background: var(--glass);
-            backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
-            border: 1px solid var(--border); border-radius: 30px;
+            backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
         }
 
-        /* PIN SCREEN */
+        /* ЭКРАН ПИН-КОДА */
         #pin-screen {
-            position: fixed; inset: 0; z-index: 500;
-            background: rgba(0,0,0,0.85); display: flex; flex-direction: column;
+            position: fixed; inset: 0; z-index: 1000;
+            background: var(--bg); display: flex; flex-direction: column;
             justify-content: center; align-items: center;
         }
-
-        .pin-dot { width: 16px; height: 16px; border: 2px solid white; border-radius: 50%; margin: 0 10px; }
+        .pin-dot { width: 14px; height: 14px; border: 2px solid white; border-radius: 50%; margin: 0 8px; transition: 0.3s; }
         .pin-dot.active { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 15px var(--accent); }
+        .keypad { display: grid; grid-template-columns: repeat(3, 75px); gap: 20px; margin-top: 40px; }
+        .key { width: 75px; height: 75px; border-radius: 50%; border: 1px solid var(--border); background: var(--glass); display: flex; justify-content: center; align-items: center; font-size: 1.5rem; cursor: pointer; }
 
-        .keypad { display: grid; grid-template-columns: repeat(3, 80px); gap: 20px; margin-top: 50px; }
-        .key { width: 80px; height: 80px; border-radius: 50%; border: 1px solid var(--border); background: var(--glass); display: flex; justify-content: center; align-items: center; font-size: 1.6rem; cursor: pointer; }
+        /* ГЛАВНЫЙ ЭКРАН */
+        #main-app {
+            display: none; flex-direction: column; padding: 20px;
+            max-width: 500px; margin: 0 auto; height: 100vh;
+        }
 
-        /* MAIN APP */
-        #main-app { display: none; height: 100vh; flex-direction: column; padding: 20px; padding-top: 50px; }
-        
-        .balance-card { padding: 30px; margin-bottom: 25px; }
-        .balance-val { font-family: 'JetBrains Mono', monospace; font-size: 2.5rem; margin: 10px 0; font-weight: 800; letter-spacing: -2px; }
+        .balance-card { padding: 25px; margin-top: 30px; margin-bottom: 20px; position: relative; }
+        .balance-val {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(1.8rem, 8vw, 2.5rem); /* Адаптивный размер */
+            font-weight: 800; letter-spacing: -2px; margin: 10px 0;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .btn-topup {
+            background: var(--accent); color: #000; border: none; width: 100%;
+            padding: 12px; border-radius: 14px; font-weight: 800; font-size: 0.75rem;
+            text-transform: uppercase; cursor: pointer; margin-top: 10px;
+        }
 
-        .section-header { display: flex; justify-content: space-between; align-items: center; margin: 20px 0 10px 5px; font-size: 0.75rem; letter-spacing: 1px; color: rgba(255,255,255,0.5); font-weight: 800; }
-        
-        /* Списки */
-        .scroll-h { display: flex; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
+        .section-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin: 20px 5px 12px; font-size: 0.7rem; font-weight: 800;
+            letter-spacing: 1px; color: rgba(255,255,255,0.4);
+        }
+
+        .scroll-h { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
         .scroll-h::-webkit-scrollbar { display: none; }
-        
-        .pill { min-width: 100px; padding: 15px 10px; margin-right: 12px; text-align: center; font-size: 0.7rem; font-weight: 600; cursor: pointer; }
-        .avatar { width: 40px; height: 40px; border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
-        
-        /* Компании (плитки) */
-        .company-tile { min-width: 120px; padding: 15px; margin-right: 12px; display: flex; align-items: center; gap: 10px; border-radius: 20px; }
-        .comp-icon { width: 35px; height: 35px; border-radius: 10px; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-weight: 800; color: var(--accent); }
 
-        .history-list { flex: 1; overflow-y: auto; margin-top: 10px; }
-        .history-card { display: flex; justify-content: space-between; padding: 15px; margin-bottom: 10px; border-radius: 20px; background: rgba(255,255,255,0.03); font-size: 0.85rem; }
+        /* Контакты */
+        .pill { min-width: 90px; padding: 15px 10px; text-align: center; cursor: pointer; }
+        .avatar { width: 42px; height: 42px; border-radius: 50%; margin: 0 auto 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 600; }
+
+        /* Компании */
+        .company-tile { min-width: 145px; padding: 12px 15px; display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .comp-icon { width: 34px; height: 34px; border-radius: 10px; background: rgba(255,255,255,0.1); border: 1px solid var(--accent); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.8rem; }
+
+        /* История */
+        .history-list { flex: 1; overflow-y: auto; margin-top: 10px; scrollbar-width: none; }
+        .history-card { display: flex; justify-content: space-between; padding: 16px; margin-bottom: 10px; background: rgba(255,255,255,0.03); border: none; }
+        .history-amt { font-family: 'JetBrains Mono'; font-weight: 600; font-size: 0.9rem; }
     </style>
 </head>
 <body>
@@ -84,29 +102,35 @@
     </div>
 
     <div id="pin-screen">
-        <h2 style="font-weight: 200; letter-spacing: 8px;">UNIONMAS</h2>
-        <div style="display: flex; margin: 40px 0;">
+        <h2 style="font-weight: 200; letter-spacing: 8px; margin-bottom: 30px;">UNIONMAS</h2>
+        <div style="display: flex;">
             <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
         </div>
         <div class="keypad">
             <div class="key" onclick="press(1)">1</div><div class="key" onclick="press(2)">2</div><div class="key" onclick="press(3)">3</div>
             <div class="key" onclick="press(4)">4</div><div class="key" onclick="press(5)">5</div><div class="key" onclick="press(6)">6</div>
             <div class="key" onclick="press(7)">7</div><div class="key" onclick="press(8)">8</div><div class="key" onclick="press(9)">9</div>
-            <div style="width:80px"></div><div class="key" onclick="press(0)">0</div><div class="key" onclick="clr()">DEL</div>
+            <div style="width:75px"></div><div class="key" onclick="press(0)">0</div><div class="key" onclick="clr()">DEL</div>
         </div>
     </div>
 
     <div id="main-app">
         <div class="balance-card aero">
-            <div style="font-size: 0.7rem; opacity: 0.5;">МОЙ БАЛАНС</div>
+            <div style="font-size: 0.65rem; opacity: 0.5; font-weight: 800;">AVAILABLE BALANCE</div>
             <div class="balance-val" id="balance">0,00 ₽</div>
-            <button onclick="topUp()" style="background: var(--accent); color: #000; border: none; padding: 8px 15px; border-radius: 10px; font-weight: 800; font-size: 0.7rem; cursor: pointer;">ПОПОЛНИТЬ</button>
+            <button class="btn-topup" onclick="topUp()">Пополнить</button>
         </div>
 
-        <div class="section-header"><span>КОНТАКТЫ</span> <span onclick="addContact()" style="color:var(--accent)">+ ДОБАВИТЬ</span></div>
+        <div class="section-header">
+            <span>КОНТАКТЫ</span>
+            <span onclick="addContact()" style="color:var(--accent); cursor:pointer">+ ДОБАВИТЬ</span>
+        </div>
         <div class="scroll-h" id="contacts-list"></div>
 
-        <div class="section-header"><span>КОМПАНИИ</span> <span onclick="addCompany()" style="color:var(--accent)">+ ДОБАВИТЬ</span></div>
+        <div class="section-header">
+            <span>КОМПАНИИ</span>
+            <span onclick="addCompany()" style="color:var(--accent); cursor:pointer">+ ДОБАВИТЬ</span>
+        </div>
         <div class="scroll-h" id="companies-list"></div>
 
         <div class="section-header">ИСТОРИЯ ОПЕРАЦИЙ</div>
@@ -115,10 +139,10 @@
 
     <script>
         let pin = "";
-        let balance = parseFloat(localStorage.getItem('um_b')) || 0;
-        let history = JSON.parse(localStorage.getItem('um_h')) || [];
-        let contacts = JSON.parse(localStorage.getItem('um_c')) || [{name:"Мария", color:"#ff4d94"}, {name:"Алекс", color:"#4dff88"}];
-        let companies = JSON.parse(localStorage.getItem('um_comp')) || [{name:"ЖКХ"}, {name:"Интернет"}];
+        let balance = parseFloat(localStorage.getItem('u_bal')) || 0;
+        let history = JSON.parse(localStorage.getItem('u_his')) || [];
+        let contacts = JSON.parse(localStorage.getItem('u_con')) || [{name:"Мария", color:"#ff4d94"}, {name:"Алекс", color:"#4dff88"}];
+        let companies = JSON.parse(localStorage.getItem('u_com')) || [{name:"ЖКХ"}, {name:"Интернет"}];
 
         function press(n) {
             if(pin.length < 4) {
@@ -128,44 +152,41 @@
                     if(pin === "2807") {
                         document.getElementById('pin-screen').style.display = 'none';
                         document.getElementById('main-app').style.display = 'flex';
-                        renderAll();
+                        render();
                     } else { alert("ОШИБКА"); clr(); }
                 }
             }
         }
         function clr() { pin = ""; document.querySelectorAll('.pin-dot').forEach(d => d.classList.remove('active')); }
 
-        function renderAll() {
+        function render() {
             document.getElementById('balance').innerText = balance.toLocaleString('ru-RU') + ' ₽';
             
-            // Рендер контактов
-            document.getElementById('contacts-list').innerHTML = contacts.map(c => `
-                <div class="aero pill" onclick="pay('${c.name}', 'user')">
+            document.getElementById('contacts-list').innerHTML = contacts.map((c, i) => `
+                <div class="aero pill" onclick="pay('${c.name}', 'user')" oncontextmenu="removeEl('con', ${i}); return false;">
                     <div class="avatar" style="background:${c.color || '#555'}">${c.name[0]}</div>
-                    ${c.name}
+                    <div style="font-size:0.7rem">${c.name}</div>
                 </div>
             `).join('');
 
-            // Рендер компаний
-            document.getElementById('companies-list').innerHTML = companies.map(c => `
-                <div class="aero company-tile" onclick="pay('${c.name}', 'comp')">
+            document.getElementById('companies-list').innerHTML = companies.map((c, i) => `
+                <div class="aero company-tile" onclick="pay('${c.name}', 'comp')" oncontextmenu="removeEl('com', ${i}); return false;">
                     <div class="comp-icon">${c.name[0]}</div>
-                    <div style="font-size:0.75rem; font-weight:700;">${c.name}</div>
+                    <div style="font-size:0.75rem; font-weight:700; overflow:hidden; text-overflow:ellipsis;">${c.name}</div>
                 </div>
             `).join('');
 
-            // Рендер истории
             document.getElementById('history').innerHTML = history.map(h => `
-                <div class="history-card aero" style="border-radius:15px; border:none; background:rgba(255,255,255,0.05)">
-                    <div>${h.n}<br><small style="opacity:0.4">UnionMas Pay</small></div>
-                    <div style="font-family:'JetBrains Mono'; color:${h.s==='+'?'#00f2ff':'#ff4d4d'}">${h.s} ${h.a} ₽</div>
+                <div class="history-card aero" style="border:none;">
+                    <div style="font-size:0.75rem;">${h.n}<br><small style="opacity:0.4">UnionMas Network</small></div>
+                    <div class="history-amt" style="color:${h.s==='+'?'#00f2ff':'#ff4d4d'}">${h.s} ${h.a.toLocaleString()} ₽</div>
                 </div>
             `).join('');
 
-            localStorage.setItem('um_b', balance);
-            localStorage.setItem('um_h', JSON.stringify(history));
-            localStorage.setItem('um_c', JSON.stringify(contacts));
-            localStorage.setItem('um_comp', JSON.stringify(companies));
+            localStorage.setItem('u_bal', balance);
+            localStorage.setItem('u_his', JSON.stringify(history));
+            localStorage.setItem('u_con', JSON.stringify(contacts));
+            localStorage.setItem('u_com', JSON.stringify(companies));
         }
 
         function topUp() {
@@ -173,24 +194,29 @@
             if(a && !isNaN(a)) {
                 balance += parseFloat(a);
                 history.unshift({n: "Пополнение баланса", a: parseFloat(a), s: "+"});
-                renderAll();
+                render();
             }
         }
 
         function addContact() {
-            let n = prompt("Имя друга:");
+            let n = prompt("Имя контакта:");
             if(n) {
-                const colors = ['#ff4d94', '#4dff88', '#00f2ff', '#ffb347'];
+                const colors = ['#ff4d94', '#4dff88', '#00f2ff', '#ffb347', '#bf47ff'];
                 contacts.push({name: n, color: colors[Math.floor(Math.random()*colors.length)]});
-                renderAll();
+                render();
             }
         }
 
         function addCompany() {
-            let n = prompt("Название компании (например, Газпром):");
-            if(n) {
-                companies.push({name: n});
-                renderAll();
+            let n = prompt("Название компании:");
+            if(n) { companies.push({name: n}); render(); }
+        }
+
+        function removeEl(type, i) {
+            if(confirm("Удалить?")) {
+                if(type === 'con') contacts.splice(i, 1);
+                else companies.splice(i, 1);
+                render();
             }
         }
 
@@ -201,7 +227,7 @@
                 if(a > balance) return alert("Недостаточно средств");
                 balance -= a;
                 history.unshift({n: (type === 'user' ? "Перевод: " : "Оплата: ") + name, a: a, s: "-"});
-                renderAll();
+                render();
             }
         }
     </script>
