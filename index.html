@@ -3,213 +3,230 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>UnionMas Bank | Aero Pro</title>
+    <title>UnionMas Bank | Aero Infinity</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --glass: rgba(255, 255, 255, 0.12);
-            --border: rgba(255, 255, 255, 0.3);
+            --glass: rgba(255, 255, 255, 0.1);
+            --border: rgba(255, 255, 255, 0.2);
             --accent: #00f2ff;
-            --error: #ff5e5e;
-            --success: #4dfa9c;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body, html {
             margin: 0; padding: 0; width: 100%; height: 100%;
-            font-family: 'Segoe UI', Roboto, sans-serif;
-            background: #0a0f1d url('https://images.unsplash.com/photo-1614850523296-d8c1af93d400?q=80&w=2070&auto=format&fit=crop') no-repeat center center fixed;
-            background-size: cover;
+            font-family: 'Montserrat', sans-serif;
+            background: #050a18;
             color: white; overflow: hidden;
         }
 
-        /* Общие стили Aero */
+        /* Анимированный фон Aero */
+        .bg-animate {
+            position: fixed; inset: 0; z-index: -1;
+            background: linear-gradient(45deg, #050a18, #111827);
+            overflow: hidden;
+        }
+
+        .sphere {
+            position: absolute; border-radius: 50%;
+            filter: blur(60px); opacity: 0.4;
+            animation: move 20s infinite alternate ease-in-out;
+        }
+
+        @keyframes move {
+            from { transform: translate(0, 0); }
+            to { transform: translate(100px, 200px); }
+        }
+
+        /* Основные блоки */
         .aero {
             background: var(--glass);
-            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-            border: 1px solid var(--border);
+            backdrop-filter: blur(35px); -webkit-backdrop-filter: blur(35px);
+            border: 1px solid var(--border); border-radius: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
         }
 
-        /* --- ПИН-КОД --- */
         #pin-screen {
-            position: fixed; inset: 0; z-index: 100;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            position: fixed; inset: 0; z-index: 500;
+            background: rgba(0,0,0,0.8); display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
         }
 
-        .pin-dots { display: flex; gap: 20px; margin-bottom: 40px; }
-        .dot { width: 16px; height: 16px; border: 2px solid white; border-radius: 50%; }
-        .dot.filled { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 15px var(--accent); }
+        .pin-dot { width: 14px; height: 14px; border: 2px solid white; border-radius: 50%; margin: 0 10px; }
+        .pin-dot.active { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 15px var(--accent); }
 
-        .keypad { display: grid; grid-template-columns: repeat(3, 80px); gap: 20px; }
-        .key {
-            width: 80px; height: 80px; border-radius: 50%; background: var(--glass);
-            border: 1px solid var(--border); display: flex; justify-content: center; 
-            align-items: center; font-size: 1.6rem; cursor: pointer;
+        .keypad { display: grid; grid-template-columns: repeat(3, 75px); gap: 20px; margin-top: 40px; }
+        .key { width: 75px; height: 75px; border-radius: 50%; border: 1px solid var(--border); background: var(--glass); display: flex; justify-content: center; align-items: center; font-size: 1.5rem; cursor: pointer; }
+
+        #main-app { display: none; height: 100vh; flex-direction: column; padding: 20px; padding-top: 60px; }
+        
+        .balance-card { padding: 30px; margin-bottom: 25px; position: relative; }
+        .balance-val { font-family: 'JetBrains Mono', monospace; font-size: 2.4rem; margin: 10px 0; font-weight: 800; letter-spacing: -1px; }
+
+        .btn-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 30px; }
+        .btn { padding: 18px 5px; border: none; border-radius: 20px; color: white; font-family: 'Montserrat'; font-weight: 700; font-size: 0.7rem; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
+
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin: 20px 0 15px; opacity: 0.8; font-size: 0.85rem; }
+        
+        /* Контакты */
+        .contact-pill {
+            min-width: 110px; padding: 20px 10px; margin-right: 12px;
+            text-align: center; font-size: 0.75rem; font-weight: 600;
         }
+        .avatar { width: 40px; height: 40px; border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
 
-        /* --- ГЛАВНЫЙ ЭКРАН --- */
-        #main-screen { height: 100%; display: none; flex-direction: column; }
-        header { padding: 40px 20px 10px; text-align: center; font-size: 1.3rem; letter-spacing: 3px; }
-        .content { flex: 1; padding: 20px; overflow-y: auto; }
-
-        .balance-card { border-radius: 28px; padding: 25px; margin-bottom: 20px; }
-        .balance-val { font-size: 2.5rem; font-weight: 800; margin: 10px 0; }
-
-        .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
-        .btn {
-            padding: 18px; border: none; border-radius: 18px; color: white;
-            font-weight: 600; cursor: pointer; transition: 0.2s;
-        }
-        .btn:active { transform: scale(0.95); opacity: 0.8; }
-        .btn-topup { background: rgba(255,255,255,0.1); border: 1px solid var(--border); }
-        .btn-transfer { background: rgba(0, 242, 255, 0.15); border: 1px solid var(--accent); }
-
-        /* История */
-        .history-item {
-            display: flex; justify-content: space-between; padding: 15px;
-            background: rgba(255,255,255,0.05); border-radius: 15px; margin-bottom: 10px;
-        }
-
-        /* --- МОДАЛЬНОЕ ОКНО КОНТАКТОВ --- */
-        #contact-modal {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.7);
-            display: none; justify-content: center; align-items: flex-end; z-index: 50;
-        }
-        .modal-body {
-            width: 100%; max-width: 500px; border-radius: 30px 30px 0 0;
-            padding: 30px 20px; animation: slideUp 0.3s ease;
-        }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-
-        .contact-row {
-            display: flex; align-items: center; padding: 15px;
-            border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer;
-        }
-        .avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--accent); margin-right: 15px; }
+        .scroll-v { flex: 1; overflow-y: auto; }
+        .history-card { display: flex; justify-content: space-between; padding: 18px; margin-bottom: 12px; border-radius: 20px; background: rgba(255,255,255,0.03); }
+        
+        #qr-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 1000; display: none; flex-direction: column; justify-content: center; align-items: center; }
     </style>
 </head>
 <body>
 
+    <div class="bg-animate">
+        <div class="sphere" style="width: 300px; height: 300px; background: #00f2ff; top: -50px; left: -50px;"></div>
+        <div class="sphere" style="width: 400px; height: 400px; background: #7000ff; bottom: -100px; right: -50px; animation-delay: -5s;"></div>
+        <div class="sphere" style="width: 250px; height: 250px; background: #0066ff; top: 40%; left: 60%; animation-delay: -10s;"></div>
+    </div>
+
     <div id="pin-screen">
-        <h2 style="font-weight: 200; margin-bottom: 30px;">Вход в UnionMas</h2>
-        <div class="pin-dots" id="dots">
-            <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        <h2 style="font-weight: 200; letter-spacing: 8px;">UNIONMAS</h2>
+        <div style="display: flex; margin: 40px 0;">
+            <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
         </div>
         <div class="keypad">
-            <div class="key" onclick="tap(1)">1</div><div class="key" onclick="tap(2)">2</div><div class="key" onclick="tap(3)">3</div>
-            <div class="key" onclick="tap(4)">4</div><div class="key" onclick="tap(5)">5</div><div class="key" onclick="tap(6)">6</div>
-            <div class="key" onclick="tap(7)">7</div><div class="key" onclick="tap(8)">8</div><div class="key" onclick="tap(9)">9</div>
-            <div></div><div class="key" onclick="tap(0)">0</div><div class="key" onclick="cls()">×</div>
+            <div class="key" onclick="press(1)">1</div><div class="key" onclick="press(2)">2</div><div class="key" onclick="press(3)">3</div>
+            <div class="key" onclick="press(4)">4</div><div class="key" onclick="press(5)">5</div><div class="key" onclick="press(6)">6</div>
+            <div class="key" onclick="press(7)">7</div><div class="key" onclick="press(8)">8</div><div class="key" onclick="press(9)">9</div>
+            <div style="width:75px"></div><div class="key" onclick="press(0)">0</div><div class="key" onclick="clr()" style="font-size:0.9rem">DEL</div>
         </div>
     </div>
 
-    <div id="main-screen">
-        <header>UNIONMAS <span style="font-weight: 700;">PRO</span></header>
-        <div class="content">
-            <div class="balance-card aero">
-                <div style="font-size: 0.8rem; opacity: 0.6;">ВАШ СЧЕТ</div>
-                <div class="balance-val" id="balance">0,00 ₽</div>
-                <div style="font-size: 0.9rem; letter-spacing: 2px;">**** 2807</div>
+    <div id="main-app">
+        <div class="balance-card aero">
+            <div style="font-size: 0.75rem; opacity: 0.6; font-weight: 600;">ACTIVE BALANCE</div>
+            <div class="balance-val" id="balance">0,00 ₽</div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                <span style="font-size: 0.8rem; opacity: 0.5;">AERO GOLD • 2807</span>
+                <div style="width: 35px; height: 22px; background: rgba(255,255,255,0.2); border-radius: 4px;"></div>
             </div>
-
-            <div class="actions">
-                <button class="btn btn-topup" onclick="doAction('topup')">Пополнить</button>
-                <button class="btn btn-transfer" onclick="openContacts()">Перевести</button>
-            </div>
-
-            <h4 style="opacity: 0.7; margin-bottom: 15px;">История операций</h4>
-            <div id="history"></div>
         </div>
+
+        <div class="btn-row">
+            <button class="btn aero" onclick="action('topup')">Ввод</button>
+            <button class="btn aero" onclick="toggleQR(true)">QR</button>
+            <button class="btn aero" style="background: rgba(0,242,255,0.1); border-color: var(--accent);" onclick="alert('Нажми на контакт ниже для перевода')">Вывод</button>
+        </div>
+
+        <div class="section-header">
+            <span>КОНТАКТЫ</span>
+            <span onclick="addContact()" style="color: var(--accent); font-weight: 800; cursor: pointer;">+ ДОБАВИТЬ</span>
+        </div>
+        <div id="contacts-list" style="display: flex; overflow-x: auto; padding-bottom: 10px;"></div>
+
+        <div class="section-header">ИСТОРИЯ ОПЕРАЦИЙ</div>
+        <div class="scroll-v" id="history"></div>
     </div>
 
-    <div id="contact-modal" onclick="closeContacts()">
-        <div class="modal-body aero" onclick="event.stopPropagation()">
-            <h3 style="margin-top: 0;">Выберите контакт</h3>
-            <div class="contact-row" onclick="doAction('transfer', 'Александр Б.')"><div class="avatar"></div> Александр Б.</div>
-            <div class="contact-row" onclick="doAction('transfer', 'Мария В.')"><div class="avatar" style="background:#ff00ff"></div> Мария В.</div>
-            <div class="contact-row" onclick="doAction('transfer', 'Дмитрий К.')"><div class="avatar" style="background:#55ff55"></div> Дмитрий К.</div>
-            <button class="btn btn-topup" style="margin-top: 20px;" onclick="closeContacts()">Отмена</button>
+    <div id="qr-modal">
+        <div class="aero" style="padding: 30px; text-align: center;">
+            <div style="background: white; padding: 15px; border-radius: 15px; margin-bottom: 20px;">
+                <svg width="180" height="180" viewBox="0 0 24 24"><path d="M3 3h8v8H3V3zm2 2v4h4V5H5zm8-2h8v8h-8V3zm2 2v4h4V5h-4zM3 13h8v8H3v-8zm2 2v4h4v-4H5zm13-2h3v2h-3v-2zm-3 0h2v2h-2v-2zm3 3h3v2h-3v-2zm-3 0h2v2h-2v-2zm3 3h3v2h-3v-2zm-3 0h2v2h-2v-2z" fill="black"/></svg>
+            </div>
+            <p style="margin-bottom: 20px;">UnionMas Instant Pay</p>
+            <button class="btn aero" style="width: 100%" onclick="toggleQR(false)">Закрыть</button>
         </div>
     </div>
 
     <script>
         let pin = "";
-        // Загружаем баланс из памяти браузера или ставим 0
-        let balance = parseFloat(localStorage.getItem('unionmas_balance')) || 0;
+        let balance = parseFloat(localStorage.getItem('umb_v3')) || 0;
+        let history = JSON.parse(localStorage.getItem('umh_v3')) || [];
+        let contacts = JSON.parse(localStorage.getItem('umc_v3')) || [
+            {name: "Мария", color: "#ff4d94"}, {name: "Артем", color: "#4dff88"}
+        ];
 
-        // Инициализация при загрузке
-        updateDisplay();
-
-        function tap(n) {
-            if (pin.length < 4) {
+        function press(n) {
+            if(pin.length < 4) {
                 pin += n;
-                const dots = document.querySelectorAll('.dot');
-                dots[pin.length-1].classList.add('filled');
-                if (pin.length === 4) {
-                    if (pin === "2807") {
+                const dots = document.querySelectorAll('.pin-dot');
+                dots[pin.length-1].classList.add('active');
+                if(pin.length === 4) {
+                    if(pin === "2807") {
                         document.getElementById('pin-screen').style.display = 'none';
-                        document.getElementById('main-screen').style.display = 'flex';
-                    } else {
-                        alert("Неверный ПИН");
-                        cls();
-                    }
+                        document.getElementById('main-app').style.display = 'flex';
+                        init();
+                    } else { alert("ACCESS DENIED"); clr(); }
                 }
             }
         }
+        function clr() { pin = ""; document.querySelectorAll('.pin-dot').forEach(d => d.classList.remove('active')); }
 
-        function cls() { 
-            pin = ""; 
-            document.querySelectorAll('.dot').forEach(d => d.classList.remove('filled')); 
+        function init() {
+            update();
+            renderContacts();
+            renderHistory();
         }
 
-        function updateDisplay() {
-            document.getElementById('balance').innerText = 
-                balance.toLocaleString('ru-RU', { minimumFractionDigits: 2 }) + ' ₽';
-            // Сохраняем в localStorage
-            localStorage.setItem('unionmas_balance', balance);
+        function update() {
+            document.getElementById('balance').innerText = balance.toLocaleString('ru-RU') + ' ₽';
+            localStorage.setItem('umb_v3', balance);
+            localStorage.setItem('umh_v3', JSON.stringify(history));
+            localStorage.setItem('umc_v3', JSON.stringify(contacts));
         }
 
-        function openContacts() { document.getElementById('contact-modal').style.display = 'flex'; }
-        function closeContacts() { document.getElementById('contact-modal').style.display = 'none'; }
+        function renderContacts() {
+            const list = document.getElementById('contacts-list');
+            list.innerHTML = contacts.map(c => `
+                <div class="aero contact-pill" onclick="transfer('${c.name}')">
+                    <div class="avatar" style="background: ${c.color || '#555'}">${c.name[0]}</div>
+                    ${c.name}
+                </div>
+            `).join('');
+        }
 
-        function doAction(type, name = "") {
-            let promptText = type === 'topup' ? "Введите сумму пополнения:" : `Сумма перевода для ${name}:`;
-            let amount = prompt(promptText);
+        function renderHistory() {
+            const hDiv = document.getElementById('history');
+            hDiv.innerHTML = history.map(h => `
+                <div class="history-card aero" style="border-radius: 15px; background: rgba(255,255,255,0.02)">
+                    <div style="font-size: 0.8rem;">${h.t}<br><small style="opacity:0.4">UnionMas Network</small></div>
+                    <div style="font-family:'JetBrains Mono'; color:${h.s==='+'?'#00f2ff':'#ff4d4d'}">${h.s} ${h.a} ₽</div>
+                </div>
+            `).join('');
+        }
 
-            if (amount && !isNaN(amount) && amount > 0) {
-                amount = parseFloat(amount);
-                
-                if (type === 'transfer' && amount > balance) {
-                    alert("Недостаточно средств!");
-                    return;
-                }
-
-                if (type === 'topup') {
-                    balance += amount;
-                    addHistory("Пополнение", amount, "plus");
-                } else {
-                    balance -= amount;
-                    addHistory(`Перевод: ${name}`, amount, "minus");
-                    closeContacts();
-                }
-                updateDisplay();
+        function action(type) {
+            let a = prompt("Введите сумму:");
+            if(a && !isNaN(a)) {
+                a = parseFloat(a);
+                balance += a;
+                history.unshift({t: "Пополнение через терминал", a: a, s: "+"});
+                update(); renderHistory();
             }
         }
 
-        function addHistory(title, amount, mode) {
-            const hist = document.getElementById('history');
-            const item = document.createElement('div');
-            item.className = 'history-item';
-            const color = mode === 'plus' ? 'var(--success)' : 'var(--error)';
-            const sign = mode === 'plus' ? '+' : '-';
-            
-            item.innerHTML = `
-                <div>${title}<br><small style="opacity:0.5">Сегодня</small></div>
-                <div style="color:${color}; font-weight:bold;">${sign} ${amount.toLocaleString()} ₽</div>
-            `;
-            hist.prepend(item);
+        function addContact() {
+            let n = prompt("Имя:");
+            if(n) {
+                const colors = ['#ff4d94', '#4dff88', '#00f2ff', '#ffb347', '#bf47ff'];
+                contacts.push({name: n, color: colors[Math.floor(Math.random()*colors.length)]});
+                update(); renderContacts();
+            }
         }
+
+        function transfer(name) {
+            let a = prompt(`Сумма для ${name}:`);
+            if(a && !isNaN(a)) {
+                a = parseFloat(a);
+                if(a > balance) return alert("Недостаточно средств");
+                balance -= a;
+                history.unshift({t: `Перевод пользователю ${name}`, a: a, s: "-"});
+                update(); renderHistory();
+            }
+        }
+
+        function toggleQR(s) { document.getElementById('qr-modal').style.display = s ? 'flex' : 'none'; }
     </script>
 </body>
 </html>
