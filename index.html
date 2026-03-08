@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>UnionMas Bank Aero</title>
+    <title>UnionMas Bank | Aero Edition</title>
     <style>
         :root {
-            --glass: rgba(255, 255, 255, 0.1);
-            --glass-heavy: rgba(255, 255, 255, 0.2);
+            --glass: rgba(255, 255, 255, 0.12);
             --border: rgba(255, 255, 255, 0.3);
             --accent: #00f2ff;
         }
@@ -16,208 +15,166 @@
 
         body, html {
             margin: 0; padding: 0; width: 100%; height: 100%;
-            font-family: 'Segoe UI', Roboto, Helvetica, sans-serif;
-            background: #050a18 url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1964&auto=format&fit=crop') no-repeat center center fixed;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background: #0a0f1d url('https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80&w=1974&auto=format&fit=crop') no-repeat center center fixed;
             background-size: cover;
             color: white;
             overflow: hidden;
         }
 
-        /* Экраны */
-        .screen {
-            position: fixed; inset: 0;
-            display: flex; flex-direction: column;
-            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s;
-            z-index: 10;
-        }
-
-        .screen-hidden { transform: translateY(100%); opacity: 0; pointer-events: none; }
-
-        /* Стеклянный эффект Aero */
-        .aero {
-            background: var(--glass);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid var(--border);
-            border-radius: 30px;
-        }
-
-        /* --- ЭКРАН ПИН-КОДА --- */
+        /* Экран ПИН-кода */
         #pin-screen {
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            justify-content: center; align-items: center;
-            z-index: 100;
+            position: fixed; inset: 0; z-index: 100;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transition: 0.5s;
         }
 
         .pin-dots { display: flex; gap: 20px; margin-bottom: 40px; }
-        .dot { width: 15px; height: 15px; border: 2px solid white; border-radius: 50%; transition: 0.2s; }
-        .dot.filled { background: white; box-shadow: 0 0 15px white; }
+        .dot { width: 16px; height: 16px; border: 2px solid white; border-radius: 50%; }
+        .dot.filled { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 15px var(--accent); }
 
-        .keypad {
-            display: grid; grid-template-columns: repeat(3, 80px); gap: 20px;
-        }
-
+        .keypad { display: grid; grid-template-columns: repeat(3, 80px); gap: 20px; }
         .key {
-            width: 80px; height: 80px; border-radius: 50%;
-            background: var(--glass); border: 1px solid var(--border);
-            display: flex; justify-content: center; align-items: center;
-            font-size: 1.5rem; cursor: pointer;
+            width: 80px; height: 80px; border-radius: 50%; background: var(--glass);
+            border: 1px solid var(--border); display: flex; justify-content: center; 
+            align-items: center; font-size: 1.6rem; cursor: pointer;
         }
-        .key:active { background: var(--glass-heavy); transform: scale(0.9); }
+        .key:active { background: rgba(255,255,255,0.3); transform: scale(0.9); }
 
-        /* --- ГЛАВНЫЙ ИНТЕРФЕЙС --- */
-        header { padding: 40px 20px 20px; text-align: center; font-size: 1.2rem; letter-spacing: 2px; }
-
-        .main-content { flex: 1; padding: 20px; overflow-y: auto; }
-
-        .card {
-            height: 200px; padding: 25px;
-            display: flex; flex-direction: column; justify-content: space-between;
-            margin-bottom: 30px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        /* Главный экран */
+        #main-screen {
+            height: 100%; display: flex; flex-direction: column;
+            opacity: 0; transform: translateY(20px); transition: 0.6s;
         }
 
-        .balance-label { font-size: 0.8rem; opacity: 0.7; text-transform: uppercase; }
-        .balance-amount { font-size: 2.2rem; font-weight: bold; margin: 5px 0; }
+        header { padding: 40px 20px 20px; text-align: center; font-size: 1.3rem; letter-spacing: 3px; font-weight: 200; }
+        .content { flex: 1; padding: 20px; overflow-y: auto; }
 
-        .btn-topup {
-            width: 100%; padding: 20px; border: none;
-            color: white; font-size: 1rem; font-weight: bold;
-            text-transform: uppercase; letter-spacing: 1px;
-            margin-bottom: 30px;
+        .aero-card {
+            background: var(--glass); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--border); border-radius: 28px; padding: 25px;
+            margin-bottom: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.4);
         }
 
-        /* История */
+        .balance-val { font-size: 2.5rem; font-weight: 800; margin: 10px 0; letter-spacing: -1px; }
+
+        .btn-main {
+            width: 100%; padding: 20px; border: none; border-radius: 20px;
+            background: rgba(255, 255, 255, 0.15); color: white;
+            font-size: 1.1rem; font-weight: 600; cursor: pointer;
+            border: 1px solid var(--border); transition: 0.3s;
+        }
+        .btn-main:active { background: rgba(255,255,255,0.3); transform: scale(0.97); }
+
         .history-item {
-            display: flex; justify-content: space-between;
-            padding: 15px; margin-bottom: 10px; border-radius: 20px;
+            display: flex; justify-content: space-between; padding: 18px;
+            background: rgba(255,255,255,0.05); border-radius: 18px; margin-bottom: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
         .shake { animation: shake 0.3s; }
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
-        }
+        @keyframes shake { 0%, 100% {transform: x(0);} 25% {transform: translateX(-8px);} 75% {transform: translateX(8px);} }
     </style>
 </head>
 <body>
 
-    <div id="pin-screen" class="screen">
-        <h2 style="margin-bottom: 30px; font-weight: 300;">Введите ПИН</h2>
-        <div class="pin-dots" id="pin-dots">
-            <div class="dot"></div>
-            <div class="dot"></div>
-            <div class="dot"></div>
-            <div class="dot"></div>
+    <div id="pin-screen">
+        <h2 style="font-weight: 300; margin-bottom: 30px;">UnionMas Secure</h2>
+        <div class="pin-dots">
+            <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
         </div>
         <div class="keypad">
-            <div class="key" onclick="pressKey('1')">1</div>
-            <div class="key" onclick="pressKey('2')">2</div>
-            <div class="key" onclick="pressKey('3')">3</div>
-            <div class="key" onclick="pressKey('4')">4</div>
-            <div class="key" onclick="pressKey('5')">5</div>
-            <div class="key" onclick="pressKey('6')">6</div>
-            <div class="key" onclick="pressKey('7')">7</div>
-            <div class="key" onclick="pressKey('8')">8</div>
-            <div class="key" onclick="pressKey('9')">9</div>
-            <div></div>
-            <div class="key" onclick="pressKey('0')">0</div>
-            <div class="key" onclick="clearPin()">×</div>
+            <div class="key" onclick="tap(1)">1</div><div class="key" onclick="tap(2)">2</div><div class="key" onclick="tap(3)">3</div>
+            <div class="key" onclick="tap(4)">4</div><div class="key" onclick="tap(5)">5</div><div class="key" onclick="tap(6)">6</div>
+            <div class="key" onclick="tap(7)">7</div><div class="key" onclick="tap(8)">8</div><div class="key" onclick="tap(9)">9</div>
+            <div></div><div class="key" onclick="tap(0)">0</div><div class="key" onclick="cls()">×</div>
         </div>
     </div>
 
-    <div id="main-screen" class="screen screen-hidden">
-        <header>UnionMas <span style="font-weight: 900;">AERO</span></header>
+    <div id="main-screen">
+        <header>UNIONMAS <span style="font-weight: 700;">BANK</span></header>
         
-        <div class="main-content">
-            <div class="card aero">
-                <div>
-                    <div class="balance-label">Ваш баланс</div>
-                    <div class="balance-amount" id="balance">50 215,84 ₽</div>
-                </div>
-                <div style="display: flex; justify-content: space-between; align-items: flex-end;">
-                    <span style="letter-spacing: 2px;">**** 2807</span>
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png" width="40" alt="mc">
-                </div>
+        <div class="content">
+            <div class="aero-card">
+                <div style="font-size: 0.8rem; opacity: 0.6;">ТЕКУЩИЙ БАЛАНС</div>
+                <div class="balance-val" id="balance">0,00 ₽</div>
+                <div style="margin-top: 20px; font-size: 0.9rem; opacity: 0.8; letter-spacing: 2px;">**** 2807</div>
             </div>
 
-            <button class="btn-topup aero" onclick="topUp()">Пополнить баланс</button>
+            <button class="btn-main" onclick="customTopUp()">Пополнить баланс</button>
 
-            <h3 style="margin-bottom: 15px; font-weight: 400; padding-left: 10px;">Последние операции</h3>
-            
-            <div id="history-list">
-                <div class="history-item aero">
-                    <span>Перевод UnionMas</span>
-                    <span style="color: #4dfa9c;">+ 2 500,00 ₽</span>
-                </div>
-                <div class="history-item aero">
-                    <span>Подписка Aero Cloud</span>
-                    <span style="color: #ff5e5e;">- 399,00 ₽</span>
-                </div>
+            <h3 style="margin: 30px 0 15px 10px; font-weight: 400;">История</h3>
+            <div id="history">
+                <div style="text-align: center; opacity: 0.4; margin-top: 20px;">Нет недавних операций</div>
             </div>
         </div>
     </div>
 
     <script>
-        const CORRECT_PIN = "2807";
-        let currentPin = "";
-        let balance = 50215.84;
+        let pin = "";
+        let balance = 0;
 
-        // Логика ПИН-кода
-        function pressKey(num) {
-            if (currentPin.length < 4) {
-                currentPin += num;
+        function tap(n) {
+            if (pin.length < 4) {
+                pin += n;
                 updateDots();
-                if (currentPin.length === 4) {
-                    setTimeout(checkPin, 200);
-                }
+                if (pin.length === 4) check();
             }
         }
+
+        function cls() { pin = ""; updateDots(); }
 
         function updateDots() {
             const dots = document.querySelectorAll('.dot');
-            dots.forEach((dot, i) => {
-                dot.classList.toggle('filled', i < currentPin.length);
-            });
+            dots.forEach((d, i) => d.classList.toggle('filled', i < pin.length));
         }
 
-        function clearPin() {
-            currentPin = "";
-            updateDots();
-        }
-
-        function checkPin() {
-            if (currentPin === CORRECT_PIN) {
+        function check() {
+            if (pin === "2807") {
                 document.getElementById('pin-screen').style.opacity = "0";
                 setTimeout(() => {
                     document.getElementById('pin-screen').style.display = "none";
-                    document.getElementById('main-screen').classList.remove('screen-hidden');
+                    const main = document.getElementById('main-screen');
+                    main.style.opacity = "1";
+                    main.style.transform = "translateY(0)";
                 }, 500);
             } else {
-                const screen = document.getElementById('pin-screen');
-                screen.classList.add('shake');
-                setTimeout(() => screen.classList.remove('shake'), 300);
-                clearPin();
+                document.getElementById('pin-screen').classList.add('shake');
+                setTimeout(() => {
+                    document.getElementById('pin-screen').classList.remove('shake');
+                    cls();
+                }, 300);
             }
         }
 
-        // Логика баланса
-        function topUp() {
-            const deposit = 5000;
-            balance += deposit;
-            document.getElementById('balance').innerText = 
-                balance.toLocaleString('ru-RU', { minimumFractionDigits: 2 }) + ' ₽';
+        function customTopUp() {
+            let amount = prompt("Введите сумму пополнения (₽):", "1000");
             
-            // Добавляем запись в историю
-            const history = document.getElementById('history-list');
-            const newItem = document.createElement('div');
-            newItem.className = 'history-item aero';
-            newItem.style.animation = 'fadeIn 0.5s ease';
-            newItem.innerHTML = `<span>Пополнение</span><span style="color: #4dfa9c;">+ 5 000,00 ₽</span>`;
-            history.prepend(newItem);
+            if (amount !== null && !isNaN(amount) && amount > 0) {
+                amount = parseFloat(amount);
+                balance += amount;
+                
+                // Обновляем баланс
+                document.getElementById('balance').innerText = 
+                    balance.toLocaleString('ru-RU', { minimumFractionDigits: 2 }) + ' ₽';
+                
+                // Обновляем историю
+                const history = document.getElementById('history');
+                if (history.innerText.includes("Нет недавних")) history.innerHTML = "";
+                
+                const item = document.createElement('div');
+                item.className = 'history-item';
+                item.style.backdropFilter = "blur(10px)";
+                item.innerHTML = `
+                    <div>Пополнение<br><small style="opacity:0.5">Только что</small></div>
+                    <div style="color:#00ffcc; font-weight:bold;">+ ${amount.toLocaleString()} ₽</div>
+                `;
+                history.prepend(item);
+            } else if (amount !== null) {
+                alert("Пожалуйста, введите корректное число");
+            }
         }
     </script>
 </body>
