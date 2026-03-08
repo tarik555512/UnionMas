@@ -10,6 +10,7 @@
             --glass: rgba(255, 255, 255, 0.05);
             --border: rgba(255, 255, 255, 0.12);
             --accent: #00f2ff;
+            --danger: #ff4d4d;
             --bg: #030712;
         }
 
@@ -22,55 +23,53 @@
 
         .aero { background: var(--glass); backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px); border: 1px solid var(--border); border-radius: 28px; }
 
-        /* ЭКРАН ПИН-КОДА */
+        /* PIN SCREEN */
         #pin-screen { position: fixed; inset: 0; z-index: 2000; background: var(--bg); display: flex; flex-direction: column; justify-content: center; align-items: center; }
         .pin-dot { width: 12px; height: 12px; border: 2px solid white; border-radius: 50%; margin: 0 10px; transition: 0.3s; }
         .pin-dot.active { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 20px var(--accent); }
         .keypad { display: grid; grid-template-columns: repeat(3, 80px); gap: 15px; margin-top: 50px; }
         .key { width: 80px; height: 80px; border-radius: 50%; border: 1px solid var(--border); background: var(--glass); display: flex; justify-content: center; align-items: center; font-size: 1.6rem; cursor: pointer; }
 
-        /* ГЛАВНОЕ ПРИЛОЖЕНИЕ */
-        #main-app { display: none; flex-direction: column; padding: 20px; max-width: 450px; margin: 0 auto; height: 100vh; animation: fadeIn 0.6s ease; overflow-y: auto; scrollbar-width: none; }
-        #main-app::-webkit-scrollbar { display: none; }
+        /* APP */
+        #main-app { display: none; flex-direction: column; padding: 20px; max-width: 450px; margin: 0 auto; height: 100vh; animation: fadeIn 0.6s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         .header { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; }
         .settings-btn { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; cursor: pointer; background: var(--glass); border-radius: 12px; border: 1px solid var(--border); }
 
-        /* КАРТОЧКА БАЛАНСА */
-        .balance-card { padding: 30px 25px; margin: 25px 0 15px; position: relative; }
+        .balance-card { padding: 30px 25px; margin: 25px 0 15px; position: relative; transition: 0.3s; }
+        .balance-card.low { border-color: var(--danger); box-shadow: 0 0 20px rgba(255, 77, 77, 0.2); }
+        
         .balance-val { font-family: 'JetBrains Mono', monospace; font-size: 2.3rem; font-weight: 800; letter-spacing: -2px; margin: 5px 0; }
         
-        /* КОНВЕРТАЦИЯ ПОД БАЛАНСОМ */
+        /* Уведомление о низком балансе */
+        #low-bal-warn { display: none; color: var(--danger); font-size: 0.65rem; font-weight: 800; letter-spacing: 1px; margin-bottom: 10px; animation: blink 1.5s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
         .convert-info { display: flex; gap: 10px; margin-bottom: 20px; }
         .mini-val { flex: 1; padding: 10px; font-size: 0.75rem; color: rgba(255,255,255,0.6); font-family: 'JetBrains Mono'; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid var(--border); }
 
-        .btn-topup { background: var(--accent); color: black; border: none; width: 100%; padding: 16px; border-radius: 18px; font-weight: 800; font-size: 0.8rem; text-transform: uppercase; cursor: pointer; transition: 0.2s; }
-        .btn-topup:active { transform: scale(0.97); }
+        .btn-topup { background: white; color: black; border: none; width: 100%; padding: 16px; border-radius: 18px; font-weight: 800; font-size: 0.8rem; text-transform: uppercase; cursor: pointer; }
 
-        .section-header { display: flex; justify-content: space-between; align-items: center; margin: 25px 5px 12px; font-size: 0.7rem; font-weight: 800; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 1px; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin: 20px 5px 12px; font-size: 0.75rem; font-weight: 800; color: rgba(255,255,255,0.3); }
         .scroll-h { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
         .scroll-h::-webkit-scrollbar { display: none; }
 
-        /* КОНТАКТЫ */
-        .pill { min-width: 100px; padding: 20px 10px; text-align: center; cursor: pointer; transition: 0.3s; }
+        .pill { min-width: 100px; padding: 20px 10px; text-align: center; cursor: pointer; }
         .avatar { width: 48px; height: 48px; border-radius: 16px; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; font-weight: 800; }
 
-        /* КОРПОРАЦИИ */
-        .company-tile { min-width: 150px; padding: 15px; display: flex; align-items: center; gap: 12px; cursor: pointer; }
+        .company-tile { min-width: 140px; padding: 15px; display: flex; align-items: center; gap: 12px; cursor: pointer; }
         .comp-icon { width: 34px; height: 34px; border-radius: 10px; background: rgba(0, 242, 255, 0.1); border: 1px solid var(--accent); display: flex; align-items: center; justify-content: center; font-weight: 800; color: white; font-size: 0.8rem; }
 
-        /* ИСТОРИЯ */
-        .history-list { margin-top: 10px; padding-bottom: 40px; }
+        .history-list { flex: 1; overflow-y: auto; margin-top: 10px; scrollbar-width: none; }
         .history-card { display: flex; justify-content: space-between; align-items: center; padding: 20px; margin-bottom: 15px; }
 
-        /* МОДАЛКА НАСТРОЕК */
         #settings-modal { display: none; position: fixed; inset: 0; z-index: 3000; background: rgba(0,0,0,0.9); backdrop-filter: blur(15px); padding: 20px; flex-direction: column; align-items: center; justify-content: center; }
-        .modal-content { width: 100%; max-width: 380px; padding: 25px; text-align: center; }
-        .setting-item { margin-bottom: 25px; text-align: left; }
+        .modal-content { width: 100%; max-width: 380px; padding: 25px; }
+        .setting-item { margin-bottom: 25px; }
         .setting-label { font-size: 0.65rem; font-weight: 800; opacity: 0.4; margin-bottom: 8px; display: block; }
         
-        .toggle-group { display: flex; background: rgba(255,255,255,0.05); border-radius: 12px; padding: 4px; }
+        .toggle-group { display: flex; background: rgba(255,255,255,0.05); border-radius: 12px; padding: 4px; border: 1px solid var(--border); }
         .toggle-btn { flex: 1; padding: 10px; border: none; background: none; color: white; font-weight: 700; border-radius: 8px; cursor: pointer; font-size: 0.7rem; }
         .toggle-btn.active { background: var(--accent); color: black; }
 
@@ -94,12 +93,13 @@
 
     <div id="main-app">
         <div class="header">
-            <div style="font-weight: 800; letter-spacing: 2px;">UNIONMAS <span style="color:var(--accent); font-size: 0.6rem;">PRO</span></div>
+            <div style="font-weight: 800; letter-spacing: 2px;">UNIONMAS <span style="color:var(--accent); font-size: 0.6rem;">LIVE</span></div>
             <div class="settings-btn" onclick="toggleModal(true)">⚙</div>
         </div>
 
-        <div class="balance-card aero">
-            <div id="lbl-bal" style="font-size: 0.6rem; opacity: 0.5; font-weight: 800; margin-bottom: 5px;">МОЙ БАЛАНС</div>
+        <div id="bal-card" class="balance-card aero">
+            <div id="lbl-bal" class="section-header" style="margin:0 0 5px 0">БАЛАНС</div>
+            <div id="low-bal-warn">НИЗКИЙ БАЛАНС / LOW BALANCE</div>
             <div class="balance-val" id="balance">0</div>
             
             <div class="convert-info">
@@ -110,36 +110,36 @@
             <button id="btn-top" class="btn-topup" onclick="topUp()">ПОПОЛНИТЬ</button>
         </div>
 
-        <div class="section-header"><span id="lbl-con">КОНТАКТЫ</span><span onclick="addContact()" style="color:var(--accent); cursor:pointer">+ ДОБАВИТЬ</span></div>
+        <div class="section-header"><span id="lbl-con">КОНТАКТЫ</span><span onclick="addContact()" style="color:var(--accent); cursor:pointer">+</span></div>
         <div class="scroll-h" id="contacts-list"></div>
 
-        <div class="section-header"><span id="lbl-cor">КОМПАНИИ</span><span onclick="addCompany()" style="color:var(--accent); cursor:pointer">+ ДОБАВИТЬ</span></div>
+        <div class="section-header"><span id="lbl-cor">КОРПОРАЦИИ</span><span onclick="addCompany()" style="color:var(--accent); cursor:pointer">+</span></div>
         <div class="scroll-h" id="companies-list"></div>
 
-        <div class="section-header"><span id="lbl-his">ИСТОРИЯ ОПЕРАЦИЙ</span></div>
+        <div class="section-header"><span id="lbl-his">ИСТОРИЯ</span></div>
         <div class="history-list" id="history"></div>
     </div>
 
     <div id="settings-modal">
         <div class="modal-content aero">
-            <h3 id="set-title" style="margin-bottom: 25px; font-weight: 800;">SETTINGS</h3>
+            <h3 id="set-title">НАСТРОЙКИ</h3>
             <div class="setting-item">
-                <span class="setting-label" id="set-lang">Language</span>
+                <span id="lbl-set-lang" class="setting-label">Язык</span>
                 <div class="toggle-group">
-                    <button id="lang-ru" class="toggle-btn" onclick="setLang('RUS')">RUS</button>
-                    <button id="lang-en" class="toggle-btn" onclick="setLang('ENG')">ENG</button>
+                    <button id="lang-rus" class="toggle-btn" onclick="setLang('RUS')">RUS</button>
+                    <button id="lang-eng" class="toggle-btn" onclick="setLang('ENG')">ENG</button>
                 </div>
             </div>
             <div class="setting-item">
-                <span class="setting-label" id="set-curr">Main Currency</span>
+                <span id="lbl-set-curr" class="setting-label">Основная валюта</span>
                 <div class="toggle-group">
                     <button id="cur-rub" class="toggle-btn" onclick="setCurr('₽')">₽</button>
                     <button id="cur-kzt" class="toggle-btn" onclick="setCurr('₸')">₸</button>
                     <button id="cur-usd" class="toggle-btn" onclick="setCurr('$')">$</button>
                 </div>
             </div>
-            <button id="btn-clear" class="btn-danger" onclick="clearHistory()">CLEAR HISTORY</button>
-            <button style="width:100%; margin-top:20px; color:white; background:none; border:none; cursor:pointer; font-weight:700;" onclick="toggleModal(false)">CLOSE</button>
+            <button id="btn-clear" class="btn-danger" onclick="clearHistory()">ОЧИСТИТЬ ИСТОРИЮ</button>
+            <button id="btn-close" style="width:100%; margin-top:20px; color:white; background:none; border:none; cursor:pointer;" onclick="toggleModal(false)">ЗАКРЫТЬ</button>
         </div>
     </div>
 
@@ -147,23 +147,22 @@
         let pin = "";
         let balance = parseFloat(localStorage.getItem('um_bal')) || 0;
         let history = JSON.parse(localStorage.getItem('um_his')) || [];
-        let contacts = JSON.parse(localStorage.getItem('um_con')) || [
-            {name:"Мария", color:"#ff4d94"}, 
-            {name:"Алекс", color:"#42f55d"}
-        ];
-        let companies = JSON.parse(localStorage.getItem('um_com')) || [
-            {name:"ЖКХ"}, {name:"Интернет"}, {name:"АЗС Газпром"}
-        ];
+        let contacts = JSON.parse(localStorage.getItem('um_con')) || [{name:"Maria", color:"#ff4d94"}];
+        let companies = JSON.parse(localStorage.getItem('um_com')) || [{name:"UnionMas Pay"}];
         let lang = localStorage.getItem('um_lang') || 'RUS';
         let currency = localStorage.getItem('um_curr') || '₽';
 
-        // Генерация курсов (привязана к дате)
+        const translations = {
+            RUS: { bal: "БАЛАНС", top: "ПОПОЛНИТЬ", con: "КОНТАКТЫ", cor: "КОМПАНИИ", his: "ИСТОРИЯ", set_title: "НАСТРОЙКИ", set_lang: "Язык", set_curr: "Основная валюта", clear: "ОЧИСТИТЬ ИСТОРИЮ", close: "ЗАКРЫТЬ", low: "НИЗКИЙ БАЛАНС" },
+            ENG: { bal: "BALANCE", top: "TOP UP", con: "CONTACTS", cor: "CORPORATIONS", his: "HISTORY", set_title: "SETTINGS", set_lang: "Language", set_curr: "Main Currency", clear: "CLEAR HISTORY", close: "CLOSE", low: "LOW BALANCE" }
+        };
+
         function getDailyRates() {
             const seed = new Date().toDateString();
             let hash = 0;
             for (let i = 0; i < seed.length; i++) hash = seed.charCodeAt(i) + ((hash << 5) - hash);
-            const rubToKzt = 5.2 + (Math.abs(hash % 10) / 50); 
-            const rubToUsd = 1 / (92 + (Math.abs(hash % 20) / 10));
+            const rubToKzt = 5.2 + (hash % 10) / 50; 
+            const rubToUsd = 1 / (92 + (hash % 20) / 10);
             return {
                 '₽': { '₸': rubToKzt, '$': rubToUsd },
                 '₸': { '₽': 1/rubToKzt, '$': (1/rubToKzt) * rubToUsd },
@@ -175,11 +174,8 @@
             if(pin.length < 4) {
                 pin += n; document.querySelectorAll('.pin-dot')[pin.length-1].classList.add('active');
                 if(pin.length === 4) {
-                    if(pin === "2807") { 
-                        document.getElementById('pin-screen').style.display = 'none'; 
-                        document.getElementById('main-app').style.display = 'flex'; 
-                        render(); 
-                    } else { alert("WRONG PIN"); clr(); }
+                    if(pin === "2807") { document.getElementById('pin-screen').style.display = 'none'; document.getElementById('main-app').style.display = 'flex'; render(); }
+                    else { alert("WRONG PIN"); clr(); }
                 }
             }
         }
@@ -187,49 +183,66 @@
         function toggleModal(show) { document.getElementById('settings-modal').style.display = show ? 'flex' : 'none'; }
         function setLang(l) { lang = l; localStorage.setItem('um_lang', l); render(); }
         function setCurr(c) { currency = c; localStorage.setItem('um_curr', c); render(); }
-        function clearHistory() { if(confirm("Очистить историю?")) { history = []; render(); } }
+        function clearHistory() { if(confirm("Clear?")) { history = []; render(); } }
+
+        function checkLowBalance() {
+            const thresholds = { '₽': 1000, '₸': 5000, '$': 15 };
+            const isLow = balance < thresholds[currency];
+            const warn = document.getElementById('low-bal-warn');
+            const card = document.getElementById('bal-card');
+            
+            if (isLow && balance > 0) {
+                warn.style.display = 'block';
+                warn.innerText = translations[lang].low;
+                card.classList.add('low');
+            } else {
+                warn.style.display = 'none';
+                card.classList.remove('low');
+            }
+        }
 
         function render() {
             const rates = getDailyRates();
+            const t = translations[lang];
+            
             document.getElementById('balance').innerText = balance.toLocaleString('ru-RU') + ' ' + currency;
+            checkLowBalance();
 
             const otherCurrs = ['₽', '₸', '$'].filter(c => c !== currency);
             document.getElementById('conv-1').innerText = `≈ ${(balance * rates[currency][otherCurrs[0]]).toLocaleString('ru-RU', {maximumFractionDigits: 0})} ${otherCurrs[0]}`;
             document.getElementById('conv-2').innerText = `≈ ${(balance * rates[currency][otherCurrs[1]]).toLocaleString('ru-RU', {maximumFractionDigits: 0})} ${otherCurrs[1]}`;
 
-            const t = { 
-                RUS: { bal: "МОЙ БАЛАНС", top: "ПОПОЛНИТЬ", con: "КОНТАКТЫ", cor: "КОМПАНИИ", his: "ИСТОРИЯ ОПЕРАЦИЙ", add: "+ ДОБАВИТЬ" }, 
-                ENG: { bal: "MY BALANCE", top: "TOP UP", con: "CONTACTS", cor: "COMPANIES", his: "TRANSACTIONS", add: "+ ADD" } 
-            }[lang];
-            
             document.getElementById('lbl-bal').innerText = t.bal;
             document.getElementById('btn-top').innerText = t.top;
-            document.getElementById('lbl-con').innerHTML = `${t.con} <span onclick="addContact()" style="color:var(--accent); cursor:pointer">${t.add}</span>`;
-            document.getElementById('lbl-cor').innerHTML = `${t.cor} <span onclick="addCompany()" style="color:var(--accent); cursor:pointer">${t.add}</span>`;
+            document.getElementById('lbl-con').innerHTML = t.con + ` <span onclick="addContact()" style="color:var(--accent); cursor:pointer">+</span>`;
+            document.getElementById('lbl-cor').innerHTML = t.cor + ` <span onclick="addCompany()" style="color:var(--accent); cursor:pointer">+</span>`;
             document.getElementById('lbl-his').innerText = t.his;
+            document.getElementById('set-title').innerText = t.set_title;
+            document.getElementById('lbl-set-lang').innerText = t.set_lang;
+            document.getElementById('lbl-set-curr').innerText = t.set_curr;
+            document.getElementById('btn-clear').innerText = t.clear;
+            document.getElementById('btn-close').innerText = t.close;
 
-            // Активные кнопки в настройках
             document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('lang-' + lang.toLowerCase()).classList.add('active');
             const currMap = {'₽': 'rub', '₸': 'kzt', '$': 'usd'};
             document.getElementById('cur-' + currMap[currency]).classList.add('active');
 
-            // Отрисовка списков
             document.getElementById('contacts-list').innerHTML = contacts.map((c, i) => `
                 <div class="aero pill" onclick="pay('${c.name}', 'user')" oncontextmenu="removeEl('con', ${i}); return false;">
                     <div class="avatar" style="background:${c.color || '#4f46e5'}">${c.name[0]}</div>
-                    <div style="font-size:0.7rem; font-weight:700;">${c.name}</div>
+                    <div style="font-size:0.75rem; font-weight:700;">${c.name}</div>
                 </div>`).join('');
 
             document.getElementById('companies-list').innerHTML = companies.map((c, i) => `
                 <div class="aero company-tile" onclick="pay('${c.name}', 'comp')" oncontextmenu="removeEl('com', ${i}); return false;">
                     <div class="comp-icon">${c.name[0]}</div>
-                    <div style="font-size:0.7rem; font-weight:700;">${c.name}</div>
+                    <div style="font-size:0.75rem; font-weight:700;">${c.name}</div>
                 </div>`).join('');
 
             document.getElementById('history').innerHTML = history.map(h => `
                 <div class="history-card aero">
-                    <div><div style="font-size:0.85rem; font-weight:700; margin-bottom:4px;">${h.n}</div><div style="font-size:0.6rem; opacity:0.4;">UnionMas Pay</div></div>
+                    <div><div style="font-size:0.85rem; font-weight:700;">${h.n}</div><div style="font-size:0.6rem; opacity:0.4;">Network Pay</div></div>
                     <div style="font-family:'JetBrains Mono'; font-weight:700; color:${h.s==='+'?'#00f2ff':'#ff4d4d'}">${h.s} ${h.a.toLocaleString()} ${h.curr}</div>
                 </div>`).join('');
 
@@ -240,43 +253,29 @@
         }
 
         function topUp() {
-            let amt = prompt(lang==='RUS'?"Сумма пополнения:":"Amount:");
+            let name = prompt(lang === 'RUS' ? "От кого:" : "From:");
+            let amt = prompt(`${currency}:`);
             if(amt && !isNaN(amt)) {
-                let val = parseFloat(amt);
-                balance += val;
-                history.unshift({n: lang==='RUS'?'Пополнение баланса':'Deposit', a: val, s: "+", curr: currency});
+                balance += parseFloat(amt);
+                history.unshift({n: (lang==='RUS'?'От: ':'From: ')+name, a: parseFloat(amt), s: "+", curr: currency});
                 render();
             }
         }
 
         function pay(name, type) {
-            let amt = prompt(`${lang==='RUS'?'Оплата':'Payment'}: ${name} (${currency})`);
+            let amt = prompt(`${name} (${currency}):`);
             if(amt && !isNaN(amt)) {
                 let v = parseFloat(amt);
-                if(v > balance) return alert("Insufficient funds");
+                if(v > balance) return alert(lang==='RUS'?'Недостаточно средств':'Insufficent funds');
                 balance -= v;
-                history.unshift({n: (lang==='RUS'?'Оплата: ':'Paid: ') + name, a: v, s: "-", curr: currency});
+                history.unshift({n: (lang==='RUS'?(type==='user'?'Перевод: ':'Оплата: '):'Pay to: ')+name, a: v, s: "-", curr: currency});
                 render();
             }
         }
 
-        function addContact() {
-            let n = prompt("Имя контакта:");
-            if(n) { contacts.push({name: n, color: '#00f2ff'}); render(); }
-        }
-
-        function addCompany() {
-            let n = prompt("Название компании:");
-            if(n) { companies.push({name: n}); render(); }
-        }
-
-        function removeEl(type, i) {
-            if(confirm("Удалить?")) {
-                if(type === 'con') contacts.splice(i, 1);
-                else companies.splice(i, 1);
-                render();
-            }
-        }
+        function addContact() { let n = prompt("Name:"); if(n) { contacts.push({name: n, color: '#00f2ff'}); render(); } }
+        function addCompany() { let n = prompt("Company:"); if(n) { companies.push({name: n}); render(); } }
+        function removeEl(type, i) { if(confirm("Delete?")) { if(type === 'con') contacts.splice(i, 1); else companies.splice(i, 1); render(); } }
     </script>
 </body>
 </html>
