@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>UnionMas Bank | Mobile optimized</title>
+    <title>UnionMas Bank | Ultimate Mobile</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -23,13 +23,12 @@
 
         .aero { background: var(--glass); backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px); border: 1px solid var(--border); border-radius: 28px; }
 
-        /* PIN SCREEN */
+        /* PIN */
         #pin-screen { position: fixed; inset: 0; z-index: 9000; background: var(--bg); display: flex; flex-direction: column; justify-content: center; align-items: center; }
         .pin-dot { width: 14px; height: 14px; border: 2px solid white; border-radius: 50%; margin: 0 12px; transition: 0.3s; }
         .pin-dot.active { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 20px var(--accent); }
         .keypad { display: grid; grid-template-columns: repeat(3, 85px); gap: 15px; margin-top: 50px; }
-        .key { width: 85px; height: 85px; border-radius: 50%; border: 1px solid var(--border); background: var(--glass); display: flex; justify-content: center; align-items: center; font-size: 1.8rem; cursor: pointer; transition: 0.1s; }
-        .key:active { background: rgba(255,255,255,0.1); transform: scale(0.9); }
+        .key { width: 85px; height: 85px; border-radius: 50%; border: 1px solid var(--border); background: var(--glass); display: flex; justify-content: center; align-items: center; font-size: 1.8rem; cursor: pointer; }
 
         /* APP MAIN */
         #main-app { display: none; flex-direction: column; padding: 20px; max-width: 450px; margin: 0 auto; height: 100vh; animation: fadeIn 0.4s ease; }
@@ -38,42 +37,42 @@
         .header { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding: 10px 0; }
         .settings-btn { width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; background: var(--glass); border-radius: 15px; border: 1px solid var(--border); }
 
-        .balance-card { padding: 40px 20px; margin: 15px 0; text-align: center; position: relative; overflow: hidden; }
-        .balance-card.low { border-color: var(--danger); }
-        .balance-val { font-family: 'JetBrains Mono', monospace; font-size: 2.6rem; font-weight: 800; letter-spacing: -2px; margin: 8px 0; }
-        #low-bal-warn { display: none; color: var(--danger); font-size: 0.7rem; font-weight: 800; text-transform: uppercase; margin-bottom: 5px; animation: blink 1s infinite; }
+        .balance-card { padding: 45px 20px; margin: 15px 0; text-align: center; position: relative; }
+        .balance-card.low { border-color: var(--danger); box-shadow: inset 0 0 20px rgba(255,77,77,0.1); }
+        .balance-val { font-family: 'JetBrains Mono', monospace; font-size: 2.6rem; font-weight: 800; letter-spacing: -2px; }
+        #low-bal-warn { display: none; color: var(--danger); font-size: 0.7rem; font-weight: 800; margin-bottom: 8px; animation: blink 1s infinite; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
-        .action-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 25px; }
-        .btn-main { padding: 18px; border-radius: 20px; font-weight: 800; font-size: 0.75rem; text-transform: uppercase; cursor: pointer; border: none; transition: 0.2s; text-align: center; }
-        .btn-main:active { transform: scale(0.96); opacity: 0.8; }
+        .action-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+        .btn-full { grid-column: span 2; }
+        .btn-main { padding: 18px; border-radius: 20px; font-weight: 800; font-size: 0.75rem; text-transform: uppercase; cursor: pointer; border: none; transition: 0.2s; }
         .btn-white { background: white; color: black; }
         .btn-glass { background: var(--glass); color: white; border: 1px solid var(--border); }
+        .btn-main:active { transform: scale(0.96); }
 
-        .section-header { display: flex; justify-content: space-between; align-items: center; margin: 15px 5px 12px; font-size: 0.8rem; font-weight: 800; color: rgba(255,255,255,0.3); }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin: 20px 5px 12px; font-size: 0.8rem; font-weight: 800; color: rgba(255,255,255,0.3); }
         .scroll-h { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
         .scroll-h::-webkit-scrollbar { display: none; }
 
         .pill { min-width: 90px; padding: 18px 10px; text-align: center; }
         .avatar { width: 52px; height: 52px; border-radius: 18px; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; font-weight: 800; }
-        .company-tile { min-width: 150px; padding: 16px; display: flex; align-items: center; gap: 12px; }
-        .comp-icon { width: 38px; height: 38px; border-radius: 12px; background: rgba(0, 242, 255, 0.1); border: 1px solid var(--accent); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9rem; }
-
-        .history-list { flex: 1; overflow-y: auto; margin-top: 10px; scrollbar-width: none; padding-bottom: 20px; }
-        .history-card { display: flex; justify-content: space-between; align-items: center; padding: 20px; margin-bottom: 12px; }
+        
+        /* КНОПКИ В НАСТРОЙКАХ (КАК РАНЬШЕ) */
+        .setting-item { margin-bottom: 25px; }
+        .setting-label { font-size: 0.65rem; font-weight: 800; opacity: 0.4; margin-bottom: 12px; display: block; text-transform: uppercase; }
+        .toggle-group { display: flex; background: rgba(255,255,255,0.05); border-radius: 12px; padding: 4px; border: 1px solid var(--border); }
+        .toggle-btn { flex: 1; padding: 12px; border: none; background: none; color: white; font-weight: 700; border-radius: 8px; cursor: pointer; font-size: 0.7rem; }
+        .toggle-btn.active { background: var(--accent); color: black; box-shadow: 0 4px 15px rgba(0, 242, 255, 0.3); }
 
         /* MODALS */
-        .modal { display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,0.9); backdrop-filter: blur(20px); padding: 25px; flex-direction: column; align-items: center; justify-content: center; }
-        .modal-content { width: 100%; max-width: 400px; padding: 30px; animation: modalIn 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28); }
-        @keyframes modalIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .modal { display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,0.95); backdrop-filter: blur(25px); padding: 25px; flex-direction: column; align-items: center; justify-content: center; }
+        .modal-content { width: 100%; max-width: 400px; padding: 30px; animation: modalIn 0.3s ease; }
+        @keyframes modalIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-        .modal-input { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border); padding: 18px; border-radius: 18px; color: white; font-family: 'Montserrat'; font-size: 1rem; font-weight: 600; margin-bottom: 15px; }
+        .modal-input { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border); padding: 18px; border-radius: 18px; color: white; font-family: 'Montserrat'; font-size: 1rem; margin-bottom: 15px; }
         
-        .btn-confirm { background: var(--accent); color: black; border: none; width: 100%; padding: 18px; border-radius: 16px; font-weight: 800; cursor: pointer; margin-bottom: 10px; }
-        .btn-danger-modal { background: var(--danger); color: white; border: none; width: 100%; padding: 18px; border-radius: 16px; font-weight: 800; cursor: pointer; }
-        .btn-cancel { background: none; color: white; border: none; width: 100%; padding: 15px; opacity: 0.6; cursor: pointer; font-weight: 600; }
-
-        .conv-row { background: rgba(255,255,255,0.03); border-radius: 18px; padding: 18px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); }
+        .history-container { width: 100%; max-height: 60vh; overflow-y: auto; scrollbar-width: none; margin: 15px 0; }
+        .history-card { display: flex; justify-content: space-between; align-items: center; padding: 20px; margin-bottom: 12px; border: 1px solid var(--border); border-radius: 20px; background: var(--glass); }
     </style>
 </head>
 <body>
@@ -98,7 +97,6 @@
         </div>
 
         <div id="bal-card" class="balance-card aero">
-            <div id="lbl-bal" class="section-header" style="margin:0 auto 5px; justify-content: center; opacity: 0.5;">БАЛАНС</div>
             <div id="low-bal-warn">НИЗКИЙ БАЛАНС</div>
             <div class="balance-val" id="balance">0</div>
         </div>
@@ -106,38 +104,44 @@
         <div class="action-btns">
             <button id="btn-top" class="btn-main btn-white" onclick="actionFlow('topup')">ПОПОЛНИТЬ</button>
             <button id="btn-conv" class="btn-main btn-glass" onclick="openModal('conv-modal')">КУРСЫ</button>
+            <button id="btn-his" class="btn-main btn-glass btn-full" onclick="openModal('history-modal')">ИСТОРИЯ</button>
         </div>
 
-        <div class="section-header"><span id="lbl-con">КОНТАКТЫ</span><span onclick="actionFlow('add_contact')" style="color:var(--accent); cursor:pointer">+ ДОБАВИТЬ</span></div>
+        <div class="section-header"><span id="lbl-con">КОНТАКТЫ</span><span onclick="actionFlow('add_contact')" style="color:var(--accent); cursor:pointer">+</span></div>
         <div class="scroll-h" id="contacts-list"></div>
 
-        <div class="section-header"><span id="lbl-cor">КОМПАНИИ</span><span onclick="actionFlow('add_company')" style="color:var(--accent); cursor:pointer">+ ДОБАВИТЬ</span></div>
+        <div class="section-header"><span id="lbl-cor">КОМПАНИИ</span><span onclick="actionFlow('add_company')" style="color:var(--accent); cursor:pointer">+</span></div>
         <div class="scroll-h" id="companies-list"></div>
-
-        <div class="section-header"><span id="lbl-his">ИСТОРИЯ</span></div>
-        <div class="history-list" id="history"></div>
     </div>
 
     <div id="settings-modal" class="modal">
         <div class="modal-content aero">
             <h3 id="set-title" style="margin-bottom:25px; text-align: center;">НАСТРОЙКИ</h3>
             <div class="setting-item">
-                <span id="lbl-set-lang" class="setting-label">Язык / Language</span>
+                <span id="lbl-set-lang" class="setting-label">Язык</span>
                 <div class="toggle-group">
                     <button id="lang-rus" class="toggle-btn" onclick="setLang('RUS')">RUS</button>
                     <button id="lang-eng" class="toggle-btn" onclick="setLang('ENG')">ENG</button>
                 </div>
             </div>
             <div class="setting-item">
-                <span id="lbl-set-curr" class="setting-label">Валюта / Currency</span>
+                <span id="lbl-set-curr" class="setting-label">Валюта</span>
                 <div class="toggle-group">
                     <button id="cur-rub" class="toggle-btn" onclick="setCurr('₽')">₽</button>
                     <button id="cur-kzt" class="toggle-btn" onclick="setCurr('₸')">₸</button>
                     <button id="cur-usd" class="toggle-btn" onclick="setCurr('$')">$</button>
                 </div>
             </div>
-            <button id="btn-clear" class="btn-danger-modal" onclick="confirmAction('clear_history')">ОЧИСТИТЬ ИСТОРИЮ</button>
-            <button class="btn-cancel" id="btn-close-set" onclick="closeModals()">ЗАКРЫТЬ</button>
+            <button id="btn-clear" style="background:rgba(255,77,77,0.1); color:var(--danger); border:1px solid var(--danger); width:100%; padding:15px; border-radius:15px; font-weight:700;" onclick="confirmAction('clear_history')">ОЧИСТИТЬ ИСТОРИЮ</button>
+            <button style="width:100%; margin-top:20px; color:white; background:none; border:none;" onclick="closeModals()">ЗАКРЫТЬ</button>
+        </div>
+    </div>
+
+    <div id="history-modal" class="modal">
+        <div class="modal-content aero" style="max-height: 85vh; display: flex; flex-direction: column;">
+            <h3 id="his-title" style="margin-bottom:20px; text-align: center;">ИСТОРИЯ</h3>
+            <div class="history-container" id="history-list"></div>
+            <button class="btn-white" style="width:100%; padding:18px; border-radius:15px; font-weight:800;" onclick="closeModals()">ЗАКРЫТЬ</button>
         </div>
     </div>
 
@@ -145,25 +149,17 @@
         <div class="modal-content aero">
             <h3 id="conv-title" style="margin-bottom:25px; text-align: center;">КУРСЫ</h3>
             <div id="conv-list"></div>
-            <button class="btn-confirm" onclick="closeModals()">OK</button>
+            <button class="btn-white" style="width:100%; padding:18px; border-radius:15px;" onclick="closeModals()">ОК</button>
         </div>
     </div>
 
     <div id="prompt-modal" class="modal">
         <div class="modal-content aero">
             <h3 id="prompt-title" style="margin-bottom:20px; text-align: center;">ВВОД</h3>
-            <input type="text" id="prompt-input-1" class="modal-input" spellcheck="false">
-            <input type="number" id="prompt-input-2" class="modal-input" inputmode="decimal">
-            <button class="btn-confirm" id="prompt-ok">ПОДТВЕРДИТЬ</button>
-            <button class="btn-cancel" id="prompt-cancel" onclick="closeModals()">ОТМЕНА</button>
-        </div>
-    </div>
-
-    <div id="confirm-modal" class="modal">
-        <div class="modal-content aero">
-            <h3 id="confirm-title" style="margin-bottom:25px; text-align: center;">УДАЛИТЬ?</h3>
-            <button class="btn-danger-modal" id="confirm-yes">УДАЛИТЬ</button>
-            <button class="btn-cancel" id="confirm-no" onclick="closeModals()">ОТМЕНА</button>
+            <input type="text" id="prompt-in-1" class="modal-input" spellcheck="false">
+            <input type="number" id="prompt-in-2" class="modal-input" inputmode="decimal">
+            <button id="prompt-ok" class="btn-white" style="width:100%; padding:18px; border-radius:15px; font-weight:800; margin-bottom:10px;">OK</button>
+            <button class="btn-cancel" style="width:100%" onclick="closeModals()">ОТМЕНА</button>
         </div>
     </div>
 
@@ -176,33 +172,10 @@
         let lang = localStorage.getItem('um_lang') || 'RUS';
         let currency = localStorage.getItem('um_curr') || '₽';
 
-        const translations = {
-            RUS: { 
-                bal: "БАЛАНС", top: "ПОПОЛНИТЬ", conv: "КУРСЫ", con: "КОНТАКТЫ", cor: "КОМПАНИИ", his: "ИСТОРИЯ", 
-                set_title: "НАСТРОЙКИ", set_lang: "Язык", set_curr: "Основная валюта", clear: "ОЧИСТИТЬ ИСТОРИЮ", 
-                close: "ЗАКРЫТЬ", low: "НИЗКИЙ БАЛАНС", conv_title: "ВАШ БАЛАНС В:", 
-                del_q: "УДАЛИТЬ?", del_yes: "УДАЛИТЬ", cancel: "ОТМЕНА", ok: "ПОДТВЕРДИТЬ", 
-                prompt_name: "Имя / Название", prompt_amt: "Сумма", err_low: "НЕДОСТАТОЧНО СРЕДСТВ", 
-                from: "От: ", transfer: "Перевод: ", pay: "Оплата: ", clear_q: "ОЧИСТИТЬ ВСЁ?", add: "+ ДОБАВИТЬ"
-            },
-            ENG: { 
-                bal: "BALANCE", top: "TOP UP", conv: "RATES", con: "CONTACTS", cor: "CORPORATIONS", his: "HISTORY", 
-                set_title: "SETTINGS", set_lang: "Language", set_curr: "Currency", clear: "CLEAR HISTORY", 
-                close: "CLOSE", low: "LOW BALANCE", conv_title: "BALANCE IN:", 
-                del_q: "DELETE?", del_yes: "DELETE", cancel: "CANCEL", ok: "CONFIRM", 
-                prompt_name: "Name / Title", prompt_amt: "Amount", err_low: "INSUFFICIENT FUNDS", 
-                from: "From: ", transfer: "Transfer: ", pay: "Payment: ", clear_q: "CLEAR ALL?", add: "+ ADD"
-            }
+        const t = {
+            RUS: { bal:"БАЛАНС", top:"ПОПОЛНИТЬ", conv:"КУРСЫ", his:"ИСТОРИЯ", con:"КОНТАКТЫ", cor:"КОМПАНИИ", set:"НАСТРОЙКИ", lang:"Язык", cur:"Валюта", clear:"ОЧИСТИТЬ ИСТОРИЮ", close:"ЗАКРЫТЬ", low:"НИЗКИЙ БАЛАНС", conv_t:"ВАШ БАЛАНС В:", name:"Имя", amt:"Сумма", del:"УДАЛИТЬ?", from:"От: ", transfer:"Перевод: ", pay:"Оплата: " },
+            ENG: { bal:"BALANCE", top:"TOP UP", conv:"RATES", his:"HISTORY", con:"CONTACTS", cor:"CORPORATIONS", set:"SETTINGS", lang:"Language", cur:"Currency", clear:"CLEAR HISTORY", close:"CLOSE", low:"LOW BALANCE", conv_t:"BALANCE IN:", name:"Name", amt:"Amount", del:"DELETE?", from:"From: ", transfer:"Transfer: ", pay:"Payment: " }
         };
-
-        function getDailyRates() {
-            const seed = new Date().toDateString();
-            let hash = 0;
-            for (let i = 0; i < seed.length; i++) hash = seed.charCodeAt(i) + ((hash << 5) - hash);
-            const rubToKzt = 5.2 + (hash % 10) / 50; 
-            const rubToUsd = 1 / (92 + (hash % 20) / 10);
-            return { '₽': { '₸': rubToKzt, '$': rubToUsd }, '₸': { '₽': 1/rubToKzt, '$': (1/rubToKzt) * rubToUsd }, '$': { '₽': 1/rubToUsd, '₸': (1/rubToUsd) * rubToKzt } };
-        }
 
         function press(n) {
             if(pin.length < 4) {
@@ -214,127 +187,93 @@
             }
         }
         function clr() { pin = ""; document.querySelectorAll('.pin-dot').forEach(d => d.classList.remove('active')); }
-        
         function openModal(id) { 
-            if(id === 'conv-modal') updateConverter();
+            if(id === 'conv-modal') updateConv();
+            if(id === 'history-modal') updateHistory();
             document.getElementById(id).style.display = 'flex'; 
         }
         function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
 
         function actionFlow(type, extra = null) {
-            const t = translations[lang];
+            const curT = t[lang];
             openModal('prompt-modal');
-            const in1 = document.getElementById('prompt-input-1');
-            const in2 = document.getElementById('prompt-input-2');
-            const okBtn = document.getElementById('prompt-ok');
-            
-            document.getElementById('prompt-title').innerText = t.ok;
-            document.getElementById('prompt-cancel').innerText = t.cancel;
-            okBtn.innerText = t.ok;
-
-            in1.value = ""; in2.value = "";
-            in1.placeholder = t.prompt_name;
-            in2.placeholder = t.prompt_amt;
-            in1.style.display = 'block';
+            const in1 = document.getElementById('prompt-in-1');
+            const in2 = document.getElementById('prompt-in-2');
+            in1.value = ""; in2.value = ""; in1.style.display = 'block'; in2.style.display = 'block';
+            in1.placeholder = curT.name; in2.placeholder = curT.amt;
 
             if(type === 'pay') { in1.value = extra.name; in1.style.display = 'none'; in2.focus(); }
-            if(type === 'add_contact' || type === 'add_company') { in2.style.display = 'none'; } else { in2.style.display = 'block'; }
+            if(type === 'add_contact' || type === 'add_company') in2.style.display = 'none';
 
-            okBtn.onclick = () => {
-                const name = in1.value;
-                const amt = parseFloat(in2.value);
-                if(type !== 'add_contact' && type !== 'add_company' && (!amt || isNaN(amt))) return;
-
-                if(type === 'topup') {
-                    balance += amt;
-                    history.unshift({n: t.from + (name || "?"), a: amt, s: "+", curr: currency});
-                } else if(type === 'pay') {
-                    if(amt > balance) { alert(t.err_low); return; }
-                    balance -= amt;
-                    history.unshift({n: (extra.type === 'user' ? t.transfer : t.pay) + name, a: amt, s: "-", curr: currency});
-                } else if(type === 'add_contact') {
-                    if(name) contacts.push({name: name, color: '#00f2ff'});
-                } else if(type === 'add_company') {
-                    if(name) companies.push({name: name});
+            document.getElementById('prompt-ok').onclick = () => {
+                const name = in1.value; const amt = parseFloat(in2.value);
+                if(type.includes('add')) {
+                    if(name) { if(type === 'add_contact') contacts.push({name: name, color: '#00f2ff'}); else companies.push({name: name}); }
+                } else {
+                    if(!amt) return;
+                    if(type === 'topup') { balance += amt; history.unshift({n: curT.from + (name || "?"), a: amt, s: "+", curr: currency}); }
+                    else {
+                        if(amt > balance) return alert(curT.low);
+                        balance -= amt; history.unshift({n: (extra.type==='user'?curT.transfer:curT.pay) + name, a: amt, s: "-", curr: currency});
+                    }
                 }
                 closeModals(); render();
             };
         }
 
-        function confirmAction(type, index = null) {
-            const t = translations[lang];
-            openModal('confirm-modal');
-            document.getElementById('confirm-title').innerText = (type === 'clear_history') ? t.clear_q : t.del_q;
-            document.getElementById('confirm-yes').innerText = t.del_yes;
-            document.getElementById('confirm-no').innerText = t.cancel;
-
-            document.getElementById('confirm-yes').onclick = () => {
-                if(type === 'clear_history') history = [];
-                else if(type === 'del_con') contacts.splice(index, 1);
-                else if(type === 'del_com') companies.splice(index, 1);
-                closeModals(); render();
-            };
+        function updateConv() {
+            const seed = new Date().toDateString(); let h = 0; for(let i=0; i<seed.length; i++) h = seed.charCodeAt(i) + ((h<<5)-h);
+            const rK = 5.2 + (h%10)/50; const rU = 1/(92 + (h%20)/10);
+            const rates = { '₽':{'₸':rK, '$':rU}, '₸':{'₽':1/rK, '$':(1/rK)*rU}, '$':{'₽':1/rU, '₸':(1/rU)*rK} };
+            const others = ['₽', '₸', '$'].filter(c => c !== currency);
+            document.getElementById('conv-title').innerText = t[lang].conv_t;
+            document.getElementById('conv-list').innerHTML = others.map(c => `<div style="display:flex; justify-content:space-between; padding:20px; background:rgba(255,255,255,0.03); border-radius:15px; margin-bottom:10px; border:1px solid var(--border);"><span>${c}</span><span style="font-family:'JetBrains Mono'; color:var(--accent); font-weight:800;">${(balance * rates[currency][c]).toLocaleString()}</span></div>`).join('');
         }
 
-        function updateConverter() {
-            const rates = getDailyRates();
-            const otherCurrs = ['₽', '₸', '$'].filter(c => c !== currency);
-            const names = {'₽': 'RUBLE', '₸': 'TENGE', '$': 'DOLLAR'};
-            document.getElementById('conv-title').innerText = translations[lang].conv_title;
-            document.getElementById('conv-list').innerHTML = otherCurrs.map(c => `
-                <div class="conv-row">
-                    <span style="font-size:0.75rem; font-weight:800; opacity:0.6">${names[c]}</span>
-                    <span style="font-family:'JetBrains Mono'; font-weight:800; color:var(--accent)">${(balance * rates[currency][c]).toLocaleString('ru-RU', {maximumFractionDigits: 0})} ${c}</span>
-                </div>`).join('');
+        function updateHistory() {
+            document.getElementById('his-title').innerText = t[lang].his;
+            document.getElementById('history-list').innerHTML = history.length ? history.map(h => `<div class="history-card"><div><div style="font-size:0.85rem; font-weight:700;">${h.n}</div><div style="font-size:0.6rem; opacity:0.4;">UnionMas Pay</div></div><div style="font-family:'JetBrains Mono'; font-weight:700; color:${h.s==='+'?'#00f2ff':'#ff4d4d'}">${h.s}${h.a.toLocaleString()} ${h.curr}</div></div>`).join('') : '<p style="text-align:center; opacity:0.3; margin-top:20px;">Empty</p>';
+        }
+
+        function confirmAction(type, i) {
+            if(confirm(t[lang].del)) {
+                if(type === 'clear_history') history = [];
+                else if(type === 'del_con') contacts.splice(i, 1);
+                else if(type === 'del_com') companies.splice(i, 1);
+                render();
+            }
         }
 
         function setLang(l) { lang = l; localStorage.setItem('um_lang', l); render(); }
         function setCurr(c) { currency = c; localStorage.setItem('um_curr', c); render(); }
 
         function render() {
-            const t = translations[lang];
-            document.getElementById('balance').innerText = balance.toLocaleString('ru-RU') + ' ' + currency;
-
-            const thresholds = { '₽': 1000, '₸': 5000, '$': 15 };
+            const curT = t[lang];
+            document.getElementById('balance').innerText = balance.toLocaleString() + ' ' + currency;
+            
+            const thresholds = { '₽':1000, '₸':5000, '$':15 };
             const isLow = balance < thresholds[currency] && balance > 0;
             document.getElementById('low-bal-warn').style.display = isLow ? 'block' : 'none';
-            document.getElementById('low-bal-warn').innerText = t.low;
+            document.getElementById('low-bal-warn').innerText = curT.low;
             document.getElementById('bal-card').classList.toggle('low', isLow);
 
-            document.getElementById('lbl-bal').innerText = t.bal;
-            document.getElementById('btn-top').innerText = t.top;
-            document.getElementById('btn-conv').innerText = t.conv;
-            document.getElementById('lbl-con').innerHTML = `${t.con} <span style="color:var(--accent); font-size:0.65rem">${t.add}</span>`;
-            document.getElementById('lbl-cor').innerHTML = `${t.cor} <span style="color:var(--accent); font-size:0.65rem">${t.add}</span>`;
-            document.getElementById('lbl-his').innerText = t.his;
-            document.getElementById('set-title').innerText = t.set_title;
-            document.getElementById('lbl-set-lang').innerText = t.set_lang;
-            document.getElementById('lbl-set-curr').innerText = t.set_curr;
-            document.getElementById('btn-clear').innerText = t.clear;
-            document.getElementById('btn-close-set').innerText = t.close;
+            document.getElementById('btn-top').innerText = curT.top;
+            document.getElementById('btn-conv').innerText = curT.conv;
+            document.getElementById('btn-his').innerText = curT.his;
+            document.getElementById('lbl-con').innerText = curT.con;
+            document.getElementById('lbl-cor').innerText = curT.cor;
+            document.getElementById('set-title').innerText = curT.set;
+            document.getElementById('lbl-set-lang').innerText = curT.lang;
+            document.getElementById('lbl-set-curr').innerText = curT.cur;
+            document.getElementById('btn-clear').innerText = curT.clear;
 
             document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('lang-' + lang.toLowerCase()).classList.add('active');
-            const currMap = {'₽': 'rub', '₸': 'kzt', '$': 'usd'};
-            document.getElementById('cur-' + currMap[currency]).classList.add('active');
+            const cMap = {'₽':'rub', '₸':'kzt', '$':'usd'};
+            document.getElementById('cur-' + cMap[currency]).classList.add('active');
 
-            document.getElementById('contacts-list').innerHTML = contacts.map((c, i) => `
-                <div class="aero pill" onclick="actionFlow('pay', {name:'${c.name}', type:'user'})" oncontextmenu="confirmAction('del_con', ${i}); return false;">
-                    <div class="avatar" style="background:${c.color || '#4f46e5'}">${c.name[0]}</div>
-                    <div style="font-size:0.75rem; font-weight:700;">${c.name}</div>
-                </div>`).join('');
-
-            document.getElementById('companies-list').innerHTML = companies.map((c, i) => `
-                <div class="aero company-tile" onclick="actionFlow('pay', {name:'${c.name}', type:'comp'})" oncontextmenu="confirmAction('del_com', ${i}); return false;">
-                    <div class="comp-icon">${c.name[0]}</div>
-                    <div style="font-size:0.75rem; font-weight:700;">${c.name}</div>
-                </div>`).join('');
-
-            document.getElementById('history').innerHTML = history.map(h => `
-                <div class="history-card aero">
-                    <div><div style="font-size:0.9rem; font-weight:700;">${h.n}</div><div style="font-size:0.65rem; opacity:0.4;">UnionMas Network</div></div>
-                    <div style="font-family:'JetBrains Mono'; font-weight:800; color:${h.s==='+'?'#00f2ff':'#ff4d4d'}">${h.s} ${h.a.toLocaleString()} ${h.curr}</div>
-                </div>`).join('');
+            document.getElementById('contacts-list').innerHTML = contacts.map((c, i) => `<div class="aero pill" onclick="actionFlow('pay', {name:'${c.name}', type:'user'})" oncontextmenu="confirmAction('del_con', ${i}); return false;"><div class="avatar" style="background:${c.color || '#4f46e5'}">${c.name[0]}</div><div style="font-size:0.75rem; font-weight:700;">${c.name}</div></div>`).join('');
+            document.getElementById('companies-list').innerHTML = companies.map((c, i) => `<div class="aero pill" style="min-width:140px" onclick="actionFlow('pay', {name:'${c.name}', type:'comp'})" oncontextmenu="confirmAction('del_com', ${i}); return false;"><div style="font-size:0.75rem; font-weight:700; text-align:center; width:100%">${c.name}</div></div>`).join('');
 
             localStorage.setItem('um_bal', balance);
             localStorage.setItem('um_his', JSON.stringify(history));
