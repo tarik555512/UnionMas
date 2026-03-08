@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>UnionMas Bank | Aero Ultimate</title>
+    <title>UnionMas Bank | Aero Business</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -20,11 +20,10 @@
             background: #050a18; color: white; overflow: hidden;
         }
 
-        /* Анимированный живой фон */
+        /* Живой фон */
         .bg-animate {
             position: fixed; inset: 0; z-index: -1;
             background: radial-gradient(circle at center, #0f172a, #050a18);
-            overflow: hidden;
         }
 
         .sphere {
@@ -33,219 +32,176 @@
             animation: move 25s infinite alternate ease-in-out;
         }
 
-        @keyframes move {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(150px, 300px) scale(1.2); }
-        }
+        @keyframes move { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(150px, 250px) scale(1.2); } }
 
-        /* Эффект Aero */
         .aero {
             background: var(--glass);
             backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
             border: 1px solid var(--border); border-radius: 30px;
         }
 
-        /* Экран ПИН */
+        /* PIN SCREEN */
         #pin-screen {
             position: fixed; inset: 0; z-index: 500;
             background: rgba(0,0,0,0.85); display: flex; flex-direction: column;
-            justify-content: center; align-items: center; transition: 0.5s;
+            justify-content: center; align-items: center;
         }
 
-        .pin-dot { width: 16px; height: 16px; border: 2px solid white; border-radius: 50%; margin: 0 10px; transition: 0.3s; }
+        .pin-dot { width: 16px; height: 16px; border: 2px solid white; border-radius: 50%; margin: 0 10px; }
         .pin-dot.active { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 15px var(--accent); }
 
         .keypad { display: grid; grid-template-columns: repeat(3, 80px); gap: 20px; margin-top: 50px; }
         .key { width: 80px; height: 80px; border-radius: 50%; border: 1px solid var(--border); background: var(--glass); display: flex; justify-content: center; align-items: center; font-size: 1.6rem; cursor: pointer; }
-        .key:active { background: rgba(255,255,255,0.2); transform: scale(0.9); }
 
-        /* Основной интерфейс */
-        #main-app { display: none; height: 100vh; flex-direction: column; padding: 20px; padding-top: 60px; animation: fadeIn 0.8s ease; }
+        /* MAIN APP */
+        #main-app { display: none; height: 100vh; flex-direction: column; padding: 20px; padding-top: 50px; }
         
-        .balance-card { padding: 30px; margin-bottom: 25px; text-align: left; }
-        .balance-val { font-family: 'JetBrains Mono', monospace; font-size: 2.6rem; margin: 10px 0; font-weight: 800; letter-spacing: -2px; color: #fff; }
+        .balance-card { padding: 30px; margin-bottom: 25px; }
+        .balance-val { font-family: 'JetBrains Mono', monospace; font-size: 2.5rem; margin: 10px 0; font-weight: 800; letter-spacing: -2px; }
 
-        .btn-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 30px; }
-        .btn { padding: 18px 5px; border: none; border-radius: 20px; color: white; font-family: 'Montserrat'; font-weight: 700; font-size: 0.7rem; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
-
-        .section-header { display: flex; justify-content: space-between; align-items: center; margin: 20px 0 15px; font-size: 0.8rem; letter-spacing: 1px; color: rgba(255,255,255,0.6); }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin: 20px 0 10px 5px; font-size: 0.75rem; letter-spacing: 1px; color: rgba(255,255,255,0.5); font-weight: 800; }
         
-        /* Лента контактов */
-        #contacts-list { display: flex; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
-        #contacts-list::-webkit-scrollbar { display: none; }
+        /* Списки */
+        .scroll-h { display: flex; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
+        .scroll-h::-webkit-scrollbar { display: none; }
         
-        .contact-pill {
-            min-width: 105px; padding: 20px 10px; margin-right: 12px;
-            text-align: center; font-size: 0.7rem; font-weight: 600; cursor: pointer;
-        }
-        .avatar { width: 45px; height: 45px; border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        .pill { min-width: 100px; padding: 15px 10px; margin-right: 12px; text-align: center; font-size: 0.7rem; font-weight: 600; cursor: pointer; }
+        .avatar { width: 40px; height: 40px; border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+        
+        /* Компании (плитки) */
+        .company-tile { min-width: 120px; padding: 15px; margin-right: 12px; display: flex; align-items: center; gap: 10px; border-radius: 20px; }
+        .comp-icon { width: 35px; height: 35px; border-radius: 10px; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-weight: 800; color: var(--accent); }
 
-        /* История */
-        .history-list { flex: 1; overflow-y: auto; padding-right: 5px; }
-        .history-card { display: flex; justify-content: space-between; padding: 18px; margin-bottom: 12px; border-radius: 20px; background: rgba(255,255,255,0.03); }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .history-list { flex: 1; overflow-y: auto; margin-top: 10px; }
+        .history-card { display: flex; justify-content: space-between; padding: 15px; margin-bottom: 10px; border-radius: 20px; background: rgba(255,255,255,0.03); font-size: 0.85rem; }
     </style>
 </head>
 <body>
 
     <div class="bg-animate">
-        <div class="sphere" style="width: 350px; height: 350px; background: #00f2ff; top: -100px; left: -100px;"></div>
-        <div class="sphere" style="width: 450px; height: 450px; background: #7000ff; bottom: -150px; right: -100px; animation-delay: -5s;"></div>
+        <div class="sphere" style="width: 300px; height: 300px; background: #00f2ff; top: -50px; left: -50px;"></div>
+        <div class="sphere" style="width: 400px; height: 400px; background: #7000ff; bottom: -100px; right: -50px; animation-delay: -5s;"></div>
     </div>
 
     <div id="pin-screen">
-        <h2 style="font-weight: 200; letter-spacing: 10px; margin-bottom: 10px;">UNIONMAS</h2>
-        <p style="font-size: 0.7rem; opacity: 0.5; margin-bottom: 40px;">SECURE ACCESS</p>
-        <div style="display: flex;">
+        <h2 style="font-weight: 200; letter-spacing: 8px;">UNIONMAS</h2>
+        <div style="display: flex; margin: 40px 0;">
             <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
         </div>
         <div class="keypad">
             <div class="key" onclick="press(1)">1</div><div class="key" onclick="press(2)">2</div><div class="key" onclick="press(3)">3</div>
             <div class="key" onclick="press(4)">4</div><div class="key" onclick="press(5)">5</div><div class="key" onclick="press(6)">6</div>
             <div class="key" onclick="press(7)">7</div><div class="key" onclick="press(8)">8</div><div class="key" onclick="press(9)">9</div>
-            <div style="width:80px"></div><div class="key" onclick="press(0)">0</div><div class="key" onclick="clr()" style="font-size:0.8rem">DEL</div>
+            <div style="width:80px"></div><div class="key" onclick="press(0)">0</div><div class="key" onclick="clr()">DEL</div>
         </div>
     </div>
 
     <div id="main-app">
         <div class="balance-card aero">
-            <div style="font-size: 0.7rem; opacity: 0.5; font-weight: 600; letter-spacing: 1px;">AVAILABLE BALANCE</div>
+            <div style="font-size: 0.7rem; opacity: 0.5;">МОЙ БАЛАНС</div>
             <div class="balance-val" id="balance">0,00 ₽</div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
-                <span style="font-size: 0.8rem; opacity: 0.4; letter-spacing: 2px;">•••• 2807</span>
-                <span style="font-size: 0.6rem; padding: 4px 8px; border: 1px solid rgba(255,255,255,0.2); border-radius: 5px;">DEBIT AERO</span>
-            </div>
+            <button onclick="topUp()" style="background: var(--accent); color: #000; border: none; padding: 8px 15px; border-radius: 10px; font-weight: 800; font-size: 0.7rem; cursor: pointer;">ПОПОЛНИТЬ</button>
         </div>
 
-        <div class="btn-row">
-            <button class="btn aero" onclick="topUp()">Ввод</button>
-            <button class="btn aero" onclick="alert('QR-Сканер активирован...')">QR</button>
-            <button class="btn aero" style="border-color: var(--accent); background: rgba(0,242,255,0.05);" onclick="alert('Выберите контакт из списка ниже')">Перевод</button>
-        </div>
+        <div class="section-header"><span>КОНТАКТЫ</span> <span onclick="addContact()" style="color:var(--accent)">+ ДОБАВИТЬ</span></div>
+        <div class="scroll-h" id="contacts-list"></div>
 
-        <div class="section-header">
-            <span>МОИ КОНТАКТЫ</span>
-            <span onclick="addNewContact()" style="color: var(--accent); font-weight: 800; cursor: pointer;">+ ДОБАВИТЬ</span>
-        </div>
-        <div id="contacts-list"></div>
+        <div class="section-header"><span>КОМПАНИИ</span> <span onclick="addCompany()" style="color:var(--accent)">+ ДОБАВИТЬ</span></div>
+        <div class="scroll-h" id="companies-list"></div>
 
-        <div class="section-header">ИСТОРИЯ ТРАНЗАКЦИЙ</div>
+        <div class="section-header">ИСТОРИЯ ОПЕРАЦИЙ</div>
         <div class="history-list" id="history"></div>
     </div>
 
     <script>
         let pin = "";
-        let balance = parseFloat(localStorage.getItem('um_bal')) || 0;
-        let history = JSON.parse(localStorage.getItem('um_hist')) || [];
-        let contacts = JSON.parse(localStorage.getItem('um_contacts')) || [
-            {name: "Мама", phone: "+79001112233", color: "#ff4d94"},
-            {name: "Артем", phone: "+79998887766", color: "#4dff88"}
-        ];
+        let balance = parseFloat(localStorage.getItem('um_b')) || 0;
+        let history = JSON.parse(localStorage.getItem('um_h')) || [];
+        let contacts = JSON.parse(localStorage.getItem('um_c')) || [{name:"Мария", color:"#ff4d94"}, {name:"Алекс", color:"#4dff88"}];
+        let companies = JSON.parse(localStorage.getItem('um_comp')) || [{name:"ЖКХ"}, {name:"Интернет"}];
 
-        // Ввод ПИН
         function press(n) {
             if(pin.length < 4) {
                 pin += n;
                 document.querySelectorAll('.pin-dot')[pin.length-1].classList.add('active');
                 if(pin.length === 4) {
                     if(pin === "2807") {
-                        document.getElementById('pin-screen').style.opacity = '0';
-                        setTimeout(() => {
-                            document.getElementById('pin-screen').style.display = 'none';
-                            document.getElementById('main-app').style.display = 'flex';
-                            init();
-                        }, 500);
-                    } else { alert("ОШИБКА ДОСТУПА"); clr(); }
+                        document.getElementById('pin-screen').style.display = 'none';
+                        document.getElementById('main-app').style.display = 'flex';
+                        renderAll();
+                    } else { alert("ОШИБКА"); clr(); }
                 }
             }
         }
         function clr() { pin = ""; document.querySelectorAll('.pin-dot').forEach(d => d.classList.remove('active')); }
 
-        function init() {
-            updateBalanceDisplay(true);
-            renderContacts();
-            renderHistory();
-        }
-
-        // Плавная анимация баланса
-        function updateBalanceDisplay(instant = false) {
-            const el = document.getElementById('balance');
-            if (instant) {
-                el.innerText = balance.toLocaleString('ru-RU') + ' ₽';
-            } else {
-                let start = parseFloat(el.innerText.replace(/\s/g, '').replace('₽', '')) || 0;
-                let duration = 1000;
-                let startTime = null;
-
-                function animate(currentTime) {
-                    if (!startTime) startTime = currentTime;
-                    let progress = Math.min((currentTime - startTime) / duration, 1);
-                    let currentVal = start + (balance - start) * progress;
-                    el.innerText = currentVal.toLocaleString('ru-RU', {maximumFractionDigits: 2}) + ' ₽';
-                    if (progress < 1) requestAnimationFrame(animate);
-                }
-                requestAnimationFrame(animate);
-            }
-            localStorage.setItem('um_bal', balance);
-            localStorage.setItem('um_hist', JSON.stringify(history));
-            localStorage.setItem('um_contacts', JSON.stringify(contacts));
-        }
-
-        function renderContacts() {
-            const list = document.getElementById('contacts-list');
-            list.innerHTML = contacts.map(c => `
-                <div class="aero contact-pill" onclick="sendMoney('${c.name}')">
-                    <div class="avatar" style="background: ${c.color}">${c.name[0]}</div>
-                    <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${c.name}</div>
+        function renderAll() {
+            document.getElementById('balance').innerText = balance.toLocaleString('ru-RU') + ' ₽';
+            
+            // Рендер контактов
+            document.getElementById('contacts-list').innerHTML = contacts.map(c => `
+                <div class="aero pill" onclick="pay('${c.name}', 'user')">
+                    <div class="avatar" style="background:${c.color || '#555'}">${c.name[0]}</div>
+                    ${c.name}
                 </div>
             `).join('');
-        }
 
-        function renderHistory() {
-            const hDiv = document.getElementById('history');
-            hDiv.innerHTML = history.length ? history.map(h => `
-                <div class="history-card aero">
-                    <div style="font-size: 0.75rem;">${h.title}<br><small style="opacity:0.4">${h.date}</small></div>
-                    <div style="font-family:'JetBrains Mono'; color:${h.type==='+'?'#00f2ff':'#ff4d4d'}">${h.type} ${h.amt.toLocaleString()} ₽</div>
+            // Рендер компаний
+            document.getElementById('companies-list').innerHTML = companies.map(c => `
+                <div class="aero company-tile" onclick="pay('${c.name}', 'comp')">
+                    <div class="comp-icon">${c.name[0]}</div>
+                    <div style="font-size:0.75rem; font-weight:700;">${c.name}</div>
                 </div>
-            `).join('') : '<div style="text-align:center; opacity:0.3; margin-top:20px;">Нет операций</div>';
+            `).join('');
+
+            // Рендер истории
+            document.getElementById('history').innerHTML = history.map(h => `
+                <div class="history-card aero" style="border-radius:15px; border:none; background:rgba(255,255,255,0.05)">
+                    <div>${h.n}<br><small style="opacity:0.4">UnionMas Pay</small></div>
+                    <div style="font-family:'JetBrains Mono'; color:${h.s==='+'?'#00f2ff':'#ff4d4d'}">${h.s} ${h.a} ₽</div>
+                </div>
+            `).join('');
+
+            localStorage.setItem('um_b', balance);
+            localStorage.setItem('um_h', JSON.stringify(history));
+            localStorage.setItem('um_c', JSON.stringify(contacts));
+            localStorage.setItem('um_comp', JSON.stringify(companies));
         }
 
         function topUp() {
-            let a = prompt("Введите сумму пополнения:");
+            let a = prompt("Сумма пополнения:");
             if(a && !isNaN(a)) {
                 balance += parseFloat(a);
-                history.unshift({title: "Пополнение баланса", amt: parseFloat(a), type: "+", date: "Сегодня"});
-                updateBalanceDisplay();
-                renderHistory();
+                history.unshift({n: "Пополнение баланса", a: parseFloat(a), s: "+"});
+                renderAll();
             }
         }
 
-        function addNewContact() {
-            let n = prompt("Имя контакта:");
-            let p = prompt("Номер телефона:");
-            if(n && p) {
-                const colors = ['#ff4d94', '#4dff88', '#00f2ff', '#ffb347', '#bf47ff', '#ff4d4d'];
-                contacts.push({
-                    name: n, 
-                    phone: p, 
-                    color: colors[Math.floor(Math.random()*colors.length)]
-                });
-                renderContacts();
-                localStorage.setItem('um_contacts', JSON.stringify(contacts));
+        function addContact() {
+            let n = prompt("Имя друга:");
+            if(n) {
+                const colors = ['#ff4d94', '#4dff88', '#00f2ff', '#ffb347'];
+                contacts.push({name: n, color: colors[Math.floor(Math.random()*colors.length)]});
+                renderAll();
             }
         }
 
-        function sendMoney(name) {
-            let a = prompt(`Сумма перевода для ${name}:`);
+        function addCompany() {
+            let n = prompt("Название компании (например, Газпром):");
+            if(n) {
+                companies.push({name: n});
+                renderAll();
+            }
+        }
+
+        function pay(name, type) {
+            let a = prompt(`Сумма для ${name}:`);
             if(a && !isNaN(a)) {
                 a = parseFloat(a);
                 if(a > balance) return alert("Недостаточно средств");
                 balance -= a;
-                history.unshift({title: `Перевод: ${name}`, amt: a, type: "-", date: "Сегодня"});
-                updateBalanceDisplay();
-                renderHistory();
+                history.unshift({n: (type === 'user' ? "Перевод: " : "Оплата: ") + name, a: a, s: "-"});
+                renderAll();
             }
         }
     </script>
